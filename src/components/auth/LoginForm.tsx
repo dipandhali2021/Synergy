@@ -8,7 +8,6 @@ import { Lock, Mail } from 'lucide-react';
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  captcha: z.string().min(1, 'Please complete the CAPTCHA'),
 });
 
 interface LoginFormProps {
@@ -67,11 +66,6 @@ export function LoginForm({ onSubmit, loading, error }: LoginFormProps) {
         {errors.password && (
           <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
         )}
-      </div>
-
-      {/* CAPTCHA placeholder - In a real implementation, integrate with a service like reCAPTCHA */}
-      <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-        <p className="text-sm text-gray-600">CAPTCHA verification would go here</p>
       </div>
 
       <button

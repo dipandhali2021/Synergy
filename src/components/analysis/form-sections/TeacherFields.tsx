@@ -4,7 +4,10 @@ import { Users, GraduationCap } from 'lucide-react';
 import { FormField } from '../FormField';
 
 export function TeacherFields() {
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-6">

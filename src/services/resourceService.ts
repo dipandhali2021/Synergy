@@ -1,77 +1,87 @@
-import { ResourceRequirement, ResourceAlert, ResourceMetrics } from '../types/resource';
+import axios from 'axios';
 
-export const analyzeResourceRequirements = async (schoolId: string): Promise<ResourceRequirement[]> => {
-  // Simulated API call to analyze resource requirements
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: '1',
-          schoolId,
-          type: 'teacher',
-          currentAmount: 15,
-          requiredAmount: 20,
-          priority: 'high',
-          status: 'pending',
-          lastUpdated: new Date().toISOString()
+const API_URL = 'http://localhost:5000/api/resources';
+
+interface ResourceData {
+  title: string;
+  description: string;
+  type: string;
+  category: string;
+  fileUrl: string;
+  fileSize: string;
+  tags: string[];
+}
+
+export const resourceService = {
+  // Get all resources with optional filters
+  getResources: async (params?: {
+    page?: number;
+    limit?: number;
+    category?: string;
+    type?: string;
+    search?: string;
+  }) => {
+    try {
+      const response = await axios.get(API_URL, { params });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Create new resource
+  createResource: async (data: ResourceData) => {
+    try {
+      const response = await axios.post(API_URL, data, {
+        headers: {
+          'Content-Type': 'application/json', // Changed from multipart/form-data
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        {
-          id: '2',
-          schoolId,
-          type: 'infrastructure',
-          currentAmount: 8,
-          requiredAmount: 10,
-          priority: 'medium',
-          status: 'pending',
-          lastUpdated: new Date().toISOString()
-        }
-      ]);
-    }, 1000);
-  });
-};
-
-export const getResourceMetrics = async (schoolId: string): Promise<ResourceMetrics> => {
-  // Simulated API call to get resource metrics
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        teacherUtilization: 0.85,
-        infrastructureUtilization: 0.75,
-        fundUtilization: 0.60,
-        studentTeacherRatio: 25,
-        infrastructureCapacity: 500,
-        budgetAllocation: 1000000
       });
-    }, 1000);
-  });
-};
-
-export const getResourceAlerts = async (schoolId: string): Promise<ResourceAlert[]> => {
-  // Simulated API call to get resource alerts
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: '1',
-          schoolId,
-          type: 'shortage',
-          resourceType: 'teacher',
-          severity: 'high',
-          message: 'Critical teacher shortage in mathematics department',
-          timestamp: new Date().toISOString(),
-          acknowledged: false
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  // Download resource
+  downloadResource: async (id: string) => {
+    try {
+      const response = await axios.post(`${API_URL}/${id}/download`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        {
-          id: '2',
-          schoolId,
-          type: 'excess',
-          resourceType: 'infrastructure',
-          severity: 'low',
-          message: 'Underutilized computer lab facilities',
-          timestamp: new Date().toISOString(),
-          acknowledged: false
-        }
-      ]);
-    }, 1000);
-  });
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Toggle like on resource
+  toggleLike: async (id: string) => {
+    try {
+      const response = await axios.post(`${API_URL}/${id}/like`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Record resource view
+  recordView: async (id: string) => {
+    try {
+      const response = await axios.post(`${API_URL}/${id}/view`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

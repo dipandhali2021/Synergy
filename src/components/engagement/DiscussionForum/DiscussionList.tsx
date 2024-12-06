@@ -1,32 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MessageSquare, ThumbsUp, Eye, Clock } from 'lucide-react';
-
-interface Discussion {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  tags: string[];
-  author: string;
-  createdAt: string;
-  likes: number;
-  views: number;
-  replies: number;
-}
+import { Discussion } from '../../../types/discussion';
+import { discussionService } from '../../../services/discussionService';
+import { DiscussionDetail } from './DiscussionDetail';
 
 interface DiscussionListProps {
   discussions: Discussion[];
-  onDiscussionClick: (id: string) => void;
+  onDiscussionUpdate: (updatedDiscussion: Discussion) => void;
 }
 
-export function DiscussionList({ discussions, onDiscussionClick }: DiscussionListProps) {
+export function DiscussionList({ discussions, onDiscussionUpdate }: DiscussionListProps) {
+  const [selectedDiscussion, setSelectedDiscussion] = useState<Discussion | null>(null);
+
+  const handleDiscussionClick = (discussion: Discussion) => {
+    setSelectedDiscussion(discussion);
+  };
+
+  const handleLike = async (e: React.MouseEvent, discussion: Discussion) => {
+    e.stopPropagation();
+    try {
+      const updatedDiscussion = await discussionService.toggleLike(discussion._id);
+      onDiscussionUpdate(updatedDiscussion);
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {discussions.map((discussion) => (
         <div
           key={discussion.id}
           className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-          onClick={() => onDiscussionClick(discussion.id)}
+          onClick={() => handleDiscussionClick(discussion)}
         >
           <div className="flex justify-between items-start mb-4">
             <div>
@@ -55,27 +61,37 @@ export function DiscussionList({ discussions, onDiscussionClick }: DiscussionLis
 
           <div className="flex items-center justify-between text-sm text-gray-500">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                <ThumbsUp className="h-4 w-4" />
-                <span>{discussion.likes}</span>
-              </div>
+              <button
+                onClick={(e) => handleLike(e, discussion)}
+                className="flex items-center gap-1 hover:text-indigo-600"
+              >
+                <ThumbsUp className={`h-4 w-4 ${discussion.likes.length > 0 ? 'text-indigo-600' : ''}`} />
+                <span>{discussion.likes.length}</span>
+              </button>
               <div className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4" />
-                <span>{discussion.replies}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Eye className="h-4 w-4" />
-                <span>{discussion.views}</span>
+                <span>{discussion.replies.length}</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4" />
               <span>{new Date(discussion.createdAt).toLocaleDateString()}</span>
-              <span className="text-gray-400">by {discussion.author}</span>
+              <span className="text-gray-400">by {discussion.author.name}</span>
             </div>
           </div>
         </div>
       ))}
+
+      {selectedDiscussion && (
+        <DiscussionDetail
+          discussion={selectedDiscussion}
+          onClose={() => setSelectedDiscussion(null)}
+          onUpdate={(updatedDiscussion) => {
+            onDiscussionUpdate(updatedDiscussion);
+            setSelectedDiscussion(updatedDiscussion);
+          }}
+        />
+      )}
     </div>
   );
 }

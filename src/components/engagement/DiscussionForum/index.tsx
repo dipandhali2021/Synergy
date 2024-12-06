@@ -1,43 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Plus, Filter } from 'lucide-react';
 import { DiscussionList } from './DiscussionList';
 import { NewDiscussionForm } from './NewDiscussionForm';
-
-const mockDiscussions = [
-  {
-    id: '1',
-    title: 'Best practices for grade reconfiguration',
-    content: 'Looking for advice on managing the transition process...',
-    category: 'discussion',
-    tags: ['transition', 'grades', 'management'],
-    author: 'John Smith',
-    createdAt: '2024-03-15T10:00:00Z',
-    likes: 12,
-    views: 45,
-    replies: 5
-  },
-  {
-    id: '2',
-    title: 'Infrastructure requirements clarification',
-    content: 'Can someone explain the minimum requirements...',
-    category: 'question',
-    tags: ['infrastructure', 'requirements'],
-    author: 'Mary Johnson',
-    createdAt: '2024-03-14T15:30:00Z',
-    likes: 8,
-    views: 32,
-    replies: 3
-  }
-];
+import { Discussion } from '../../../types/discussion';
+import { discussionService } from '../../../services/discussionService';
 
 export function DiscussionForum() {
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleDiscussionClick = (id: string) => {
-    console.log('Viewing discussion:', id);
+  useEffect(() => {
+    fetchDiscussions();
+  }, [searchTerm, selectedCategory, currentPage]);
+
+  const fetchDiscussions = async () => {
+    try {
+      setLoading(true);
+      const response = await discussionService.getDiscussions({
+        page: currentPage,
+        category: selectedCategory !== 'all' ? selectedCategory : undefined,
+        search: searchTerm || undefined,
+      });
+      setDiscussions(response.discussions);
+    } catch (error) {
+      setError('Failed to fetch discussions');
+      console.error('Error fetching discussions:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleDiscussionCreate = async (data: Omit<Discussion, 'id' | 'author' | 'likes' | 'replies' | 'createdAt' | 'status'>) => {
+    try {
+      await discussionService.createDiscussion(data);
+      setIsCreating(false);
+      fetchDiscussions();
+    } catch (error) {
+      console.error('Error creating discussion:', error);
+    }
+  };
+
+  const handleDiscussionUpdate = (updatedDiscussion: Discussion) => {
+    setDiscussions(discussions.map(d => 
+      d._id === updatedDiscussion._id ? updatedDiscussion : d
+    ));
+  };
+
+  if (loading) {
+    return <div className="flex justify-center py-8">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-600 py-8">{error}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -56,10 +76,7 @@ export function DiscussionForum() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-xl font-semibold mb-6">Create New Discussion</h3>
           <NewDiscussionForm
-            onSubmit={(data) => {
-              console.log('New discussion:', data);
-              setIsCreating(false);
-            }}
+            onSubmit={handleDiscussionCreate}
             onCancel={() => setIsCreating(false)}
           />
         </div>
@@ -89,8 +106,8 @@ export function DiscussionForum() {
           </div>
 
           <DiscussionList
-            discussions={mockDiscussions}
-            onDiscussionClick={handleDiscussionClick}
+            discussions={discussions}
+            onDiscussionUpdate={handleDiscussionUpdate}
           />
         </>
       )}

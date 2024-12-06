@@ -14,6 +14,7 @@ import {
   Eye,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 interface SchoolCardProps {
   school: School;
@@ -129,8 +130,13 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
             onClick={onViewDetails}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
           >
-            <Eye className="h-4 w-4" />
-            <span className="text-sm font-medium">View Details</span>
+             <Link
+              to={`/detail/${school.id}`}
+              className="flex items-center gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              <span className="text-sm font-medium">View Details</span>
+            </Link>
           </button>
         </div>
       </div>
@@ -144,7 +150,7 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
           <div className="mt-2 bg-yellow-100 rounded-full h-2">
             <div
               className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
-              style={{ width: '60%' }}
+              style={{ width: '20%' }}
             />
           </div>
         </div>

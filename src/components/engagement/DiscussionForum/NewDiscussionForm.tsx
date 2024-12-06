@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Tag, X } from 'lucide-react';
+import { NewDiscussion } from '../../../types/discussion';
 
 const discussionSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -11,10 +12,8 @@ const discussionSchema = z.object({
   tags: z.array(z.string()).min(1, 'Add at least one tag')
 });
 
-type DiscussionFormData = z.infer<typeof discussionSchema>;
-
 interface NewDiscussionFormProps {
-  onSubmit: (data: DiscussionFormData) => void;
+  onSubmit: (data: NewDiscussion) => void;
   onCancel: () => void;
 }
 
@@ -22,7 +21,7 @@ export function NewDiscussionForm({ onSubmit, onCancel }: NewDiscussionFormProps
   const [tags, setTags] = React.useState<string[]>([]);
   const [tagInput, setTagInput] = React.useState('');
 
-  const { register, handleSubmit, formState: { errors } } = useForm<DiscussionFormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<NewDiscussion>({
     resolver: zodResolver(discussionSchema),
     defaultValues: {
       tags: []
@@ -40,7 +39,7 @@ export function NewDiscussionForm({ onSubmit, onCancel }: NewDiscussionFormProps
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const onFormSubmit = (data: DiscussionFormData) => {
+  const onFormSubmit = (data: NewDiscussion) => {
     onSubmit({ ...data, tags });
   };
 

@@ -7,6 +7,7 @@ export interface User {
   role: Role;
   verified: boolean;
   approved: boolean;
+  profileImage?: string;
 }
 
 export interface AuthState {
@@ -19,7 +20,6 @@ export interface AuthState {
 export interface LoginCredentials {
   email: string;
   password: string;
-  captcha: string;
 }
 
 export interface RegisterData {
@@ -27,5 +27,4 @@ export interface RegisterData {
   email: string;
   password: string;
   role: Role;
-  documents?: File[];
 }

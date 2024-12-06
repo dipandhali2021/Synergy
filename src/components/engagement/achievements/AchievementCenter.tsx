@@ -1,37 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter, Trophy } from 'lucide-react';
 import { AchievementCard } from './AchievementCard';
-
-const mockAchievements = [
-  {
-    id: '1',
-    title: 'Infrastructure Pioneer',
-    description: 'Successfully completed infrastructure standardization phase',
-    earnedDate: '2024-03-15',
-    points: 500,
-    category: 'infrastructure',
-    icon: 'building'
-  },
-  {
-    id: '2',
-    title: 'Community Leader',
-    description: 'Actively participated in 10 community discussions',
-    earnedDate: '2024-03-10',
-    points: 250,
-    category: 'engagement',
-    icon: 'users'
-  }
-];
+import { achievementService } from '../../../services/achievementService';
+import { Achievement, AchievementsResponse } from '../../../types/achievement';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 export function AchievementCenter() {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [selectedUserId, setSelectedUserId] = useState('6752c73dae58e09690f2251c'); // Default user ID
 
-  const handleShare = (id: string) => {
-    console.log('Sharing achievement:', id);
+  useEffect(() => {
+    fetchAchievements();
+  }, [selectedUserId]);
+
+  const fetchAchievements = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response: AchievementsResponse = await achievementService.getAchievements(selectedUserId);
+      setAchievements(response.achievements);
+      setTotalPoints(response.totalPoints);
+    } catch (err) {
+      setError('Failed to fetch achievements');
+      console.error('Error fetching achievements:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredAchievements = mockAchievements.filter(achievement => {
+  const handleShare = async (achievementId: string) => {
+    try {
+      await achievementService.shareAchievement(achievementId);
+      fetchAchievements(); // Refresh the list after sharing
+    } catch (error) {
+      console.error('Error sharing achievement:', error);
+    }
+  };
+
+  const filteredAchievements = achievements.filter(achievement => {
     const matchesSearch = 
       achievement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       achievement.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -41,7 +52,17 @@ export function AchievementCenter() {
     return matchesSearch && matchesCategory;
   });
 
-  const totalPoints = mockAchievements.reduce((sum, achievement) => sum + achievement.points, 0);
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -73,13 +94,24 @@ export function AchievementCenter() {
           <option value="infrastructure">Infrastructure</option>
           <option value="engagement">Community Engagement</option>
           <option value="academic">Academic Excellence</option>
+          <option value="compliance">Compliance</option>
+        </select>
+
+        {/* School/User Selection */}
+        <select
+          value={selectedUserId}
+          onChange={(e) => setSelectedUserId(e.target.value)}
+          className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="67513b1368152a2233c3a7a6">School 1</option>
+          {/* Add more schools as needed */}
         </select>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
         {filteredAchievements.map((achievement) => (
           <AchievementCard
-            key={achievement.id}
+            key={achievement._id}
             achievement={achievement}
             onShare={handleShare}
           />

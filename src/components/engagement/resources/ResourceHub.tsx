@@ -1,63 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter, Upload } from 'lucide-react';
 import { ResourceCard } from './ResourceCard';
-
-const mockResources = [
-  {
-    id: '1',
-    title: 'Grade Reconfiguration Template',
-    description: 'Comprehensive template for planning grade structure changes',
-    type: 'excel',
-    category: 'template',
-    fileUrl: '/templates/grade-reconfig.xlsx',
-    uploadedBy: 'Education Board',
-    uploadDate: '2024-03-01',
-    downloads: 245,
-    views: 890,
-    likes: 156,
-    fileSize: '2.3 MB'
-  },
-  {
-    id: '2',
-    title: 'Infrastructure Planning Guide',
-    description: 'Step-by-step guide for school infrastructure development',
-    type: 'pdf',
-    category: 'guide',
-    fileUrl: '/guides/infrastructure.pdf',
-    uploadedBy: 'Ministry of Education',
-    uploadDate: '2024-03-15',
-    downloads: 189,
-    views: 567,
-    likes: 98,
-    fileSize: '4.1 MB'
-  }
-];
+import { UploadResourceForm } from './UploadResourceForm';
+import { resourceService } from '../../../services/resourceService';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 export function ResourceHub() {
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [showUploadForm, setShowUploadForm] = useState(false);
 
-  const handleDownload = (id: string) => {
-    console.log('Downloading resource:', id);
+  useEffect(() => {
+    fetchResources();
+  }, [searchTerm, categoryFilter, typeFilter]);
+
+  const fetchResources = async () => {
+    try {
+      setLoading(true);
+      const params: Record<string, any> = {};
+      
+      if (searchTerm) params.search = searchTerm;
+      if (categoryFilter !== 'all') params.category = categoryFilter;
+      if (typeFilter !== 'all') params.type = typeFilter;
+
+      const response = await resourceService.getResources(params);
+      setResources(response.resources);
+    } catch (error) {
+      setError('Failed to fetch resources');
+      console.error('Error fetching resources:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredResources = mockResources.filter(resource => {
-    const matchesSearch = 
-      resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      resource.description.toLowerCase().includes(searchTerm.toLowerCase());
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-    const matchesCategory = categoryFilter === 'all' || resource.category === categoryFilter;
-    const matchesType = typeFilter === 'all' || resource.type === typeFilter;
-
-    return matchesSearch && matchesCategory && matchesType;
-  });
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Resource Hub</h2>
-        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+        <button
+          onClick={() => setShowUploadForm(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+        >
           <Upload className="h-5 w-5" />
           Share Resource
         </button>
@@ -92,21 +91,27 @@ export function ResourceHub() {
         >
           <option value="all">All Types</option>
           <option value="pdf">PDF</option>
-          <option value="excel">Excel</option>
           <option value="word">Word</option>
-          <option value="presentation">Presentation</option>
+          <option value="excel">Excel</option>
         </select>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {filteredResources.map((resource) => (
+        {resources.map((resource) => (
           <ResourceCard
-            key={resource.id}
+            key={resource._id}
             resource={resource}
-            onDownload={handleDownload}
+            onUpdate={fetchResources}
           />
         ))}
       </div>
+
+      {showUploadForm && (
+        <UploadResourceForm
+          onClose={() => setShowUploadForm(false)}
+          onSuccess={fetchResources}
+        />
+      )}
     </div>
   );
 }

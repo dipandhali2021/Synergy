@@ -1,26 +1,64 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FileText, Download, Eye, ThumbsUp, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
+import { resourceService } from '../../../services/resourceService';
 
 interface ResourceCardProps {
   resource: {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     type: string;
     category: string;
     fileUrl: string;
-    uploadedBy: string;
-    uploadDate: string;
-    downloads: number;
-    views: number;
-    likes: number;
+    uploadedBy: {
+      _id: string;
+      name: string;
+    };
     fileSize: string;
+    likes: any[];
+    downloads: any[];
+    views: any[];
+    createdAt: string;
+    updatedAt: string;
   };
-  onDownload: (id: string) => void;
+  onUpdate: () => void;
 }
 
-export function ResourceCard({ resource, onDownload }: ResourceCardProps) {
+export function ResourceCard({ resource, onUpdate }: ResourceCardProps) {
+  useEffect(() => {
+    // Record view when card is mounted
+    const recordResourceView = async () => {
+      try {
+        await resourceService.recordView(resource._id);
+        onUpdate();
+      } catch (error) {
+        console.error('Error recording view:', error);
+      }
+    };
+    recordResourceView();
+  }, [resource._id]);
+
+  const handleDownload = async () => {
+    try {
+      const response = await resourceService.downloadResource(resource._id);
+      // Open the download URL in a new tab
+      window.open(response.downloadUrl, '_blank');
+      onUpdate();
+    } catch (error) {
+      console.error('Error downloading resource:', error);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      await resourceService.toggleLike(resource._id);
+      onUpdate();
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-start gap-4">
@@ -45,30 +83,30 @@ export function ResourceCard({ resource, onDownload }: ResourceCardProps) {
           </div>
 
           <div className="flex items-center gap-6 mt-4 text-sm text-gray-500">
-            <div className="flex items-center gap-1">
+            <button onClick={handleDownload} className="flex items-center gap-1 hover:text-indigo-600">
               <Download className="h-4 w-4" />
               <span>{resource.downloads} downloads</span>
-            </div>
+            </button>
             <div className="flex items-center gap-1">
               <Eye className="h-4 w-4" />
               <span>{resource.views} views</span>
             </div>
-            <div className="flex items-center gap-1">
+            <button onClick={handleLike} className="flex items-center gap-1 hover:text-indigo-600">
               <ThumbsUp className="h-4 w-4" />
               <span>{resource.likes} likes</span>
-            </div>
+            </button>
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              <span>{format(new Date(resource.uploadDate), 'MMM d, yyyy')}</span>
+              <span>{format(new Date(resource.createdAt), 'MMM d, yyyy')}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between mt-4">
             <div className="text-sm text-gray-500">
-              Uploaded by {resource.uploadedBy} • {resource.fileSize}
+            Uploaded by {resource.uploadedBy.name} • {resource.fileSize}
             </div>
             <button
-              onClick={() => onDownload(resource.id)}
+              onClick={handleDownload}
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
               <Download className="h-4 w-4" />

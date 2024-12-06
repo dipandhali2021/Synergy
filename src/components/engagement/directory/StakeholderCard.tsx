@@ -1,22 +1,57 @@
 import React from 'react';
-import { Building2, MapPin, Mail, Phone } from 'lucide-react';
+import { Building2, MapPin, Mail, Phone, UserCheck, UserPlus, Clock } from 'lucide-react';
+import { Stakeholder } from '../../../types/directory';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface StakeholderCardProps {
-  stakeholder: {
-    id: string;
-    name: string;
-    role: string;
-    organization: string;
-    location: string;
-    email: string;
-    phone: string;
-    expertise: string[];
-    imageUrl?: string;
-  };
+  stakeholder: Stakeholder;
   onConnect: (id: string) => void;
 }
 
 export function StakeholderCard({ stakeholder, onConnect }: StakeholderCardProps) {
+  const { user } = useAuth();
+
+  const getConnectionStatus = () => {
+    if (!user) return null;
+    const connection = stakeholder.connections.find(
+      conn => conn.user === user.id
+    );
+    return connection?.status;
+  };
+
+  const connectionStatus = getConnectionStatus();
+
+  const renderConnectionButton = () => {
+    if (!user) return null;
+
+    switch (connectionStatus) {
+      case 'accepted':
+        return (
+          <button className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
+            <UserCheck className="h-4 w-4" />
+            Connected
+          </button>
+        );
+      case 'pending':
+        return (
+          <button className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+            <Clock className="h-4 w-4" />
+            Request Pending
+          </button>
+        );
+      default:
+        return (
+          <button
+            onClick={() => onConnect(stakeholder._id)}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          >
+            <UserPlus className="h-4 w-4" />
+            Connect
+          </button>
+        );
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-start gap-4">
@@ -40,12 +75,7 @@ export function StakeholderCard({ stakeholder, onConnect }: StakeholderCardProps
               <h3 className="text-lg font-semibold">{stakeholder.name}</h3>
               <p className="text-gray-600 text-sm">{stakeholder.role}</p>
             </div>
-            <button
-              onClick={() => onConnect(stakeholder.id)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm"
-            >
-              Connect
-            </button>
+            {renderConnectionButton()}
           </div>
 
           <div className="mt-4 space-y-2">
@@ -55,17 +85,17 @@ export function StakeholderCard({ stakeholder, onConnect }: StakeholderCardProps
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <MapPin className="h-4 w-4" />
-              <span>{stakeholder.location}</span>
+              <span>{stakeholder.location.state}, {stakeholder.location.district}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Mail className="h-4 w-4" />
-              <a href={`mailto:${stakeholder.email}`} className="text-indigo-600 hover:text-indigo-800">
-                {stakeholder.email}
+              <a href={`mailto:${stakeholder.contact.email}`} className="text-indigo-600 hover:text-indigo-800">
+                {stakeholder.contact.email}
               </a>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Phone className="h-4 w-4" />
-              <span>{stakeholder.phone}</span>
+              <span>{stakeholder.contact.phone}</span>
             </div>
           </div>
 

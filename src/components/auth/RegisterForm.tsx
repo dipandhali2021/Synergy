@@ -3,14 +3,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { RegisterData, Role } from '../../types/auth';
-import { User, Mail, Lock, Upload } from 'lucide-react';
+import { User, Mail, Lock } from 'lucide-react';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   role: z.enum(['NORMAL', 'SCHOOL_ADMIN'] as const),
-  documents: z.any().optional(),
 });
 
 interface RegisterFormProps {
@@ -109,34 +108,10 @@ export function RegisterForm({ onSubmit, loading, error }: RegisterFormProps) {
       </div>
 
       {selectedRole === 'SCHOOL_ADMIN' && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            School Documents
-          </label>
-          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-            <div className="space-y-1 text-center">
-              <Upload className="mx-auto h-12 w-12 text-gray-400" />
-              <div className="flex text-sm text-gray-600">
-                <label
-                  htmlFor="documents"
-                  className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                >
-                  <span>Upload files</span>
-                  <input
-                    {...register('documents')}
-                    id="documents"
-                    type="file"
-                    multiple
-                    className="sr-only"
-                  />
-                </label>
-                <p className="pl-1">or drag and drop</p>
-              </div>
-              <p className="text-xs text-gray-500">
-                PDF, PNG, JPG up to 10MB each
-              </p>
-            </div>
-          </div>
+        <div className="bg-yellow-50 p-4 rounded-md">
+          <p className="text-sm text-yellow-700">
+            Note: School administrator accounts require approval. You will be notified once your account is approved.
+          </p>
         </div>
       )}
 

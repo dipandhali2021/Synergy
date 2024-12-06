@@ -1,52 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { SurveyCard } from './SurveyCard';
-
-const mockSurveys = [
-  {
-    id: '1',
-    title: 'School Infrastructure Assessment',
-    description: 'Help us understand your current infrastructure needs and challenges',
-    startDate: '2024-03-01T00:00:00Z',
-    endDate: '2024-03-31T23:59:59Z',
-    totalResponses: 145,
-    status: 'active' as const,
-    completionRate: 75
-  },
-  {
-    id: '2',
-    title: 'Teacher Training Needs',
-    description: 'Assessment of training requirements for standardization',
-    startDate: '2024-03-15T00:00:00Z',
-    endDate: '2024-04-15T23:59:59Z',
-    totalResponses: 89,
-    status: 'active' as const
-  },
-  {
-    id: '3',
-    title: 'Parent Feedback Survey',
-    description: 'Gathering parent perspectives on school transition',
-    startDate: '2024-02-01T00:00:00Z',
-    endDate: '2024-02-28T23:59:59Z',
-    totalResponses: 256,
-    status: 'completed' as const,
-    completionRate: 100
-  }
-];
+import { surveyService } from '../../../services/surveyService';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 export function SurveyCenter() {
+  const [surveys, setSurveys] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleTakeSurvey = (id: string) => {
-    console.log('Taking survey:', id);
+  useEffect(() => {
+    fetchSurveys();
+  }, [searchTerm, statusFilter, currentPage]);
+
+  const fetchSurveys = async () => {
+    try {
+      setLoading(true);
+      const response = await surveyService.getSurveys({
+        page: currentPage,
+        status: statusFilter !== 'all' ? statusFilter : undefined
+      });
+      setSurveys(response.surveys);
+    } catch (error) {
+      setError('Failed to fetch surveys');
+      console.error('Error fetching surveys:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredSurveys = mockSurveys.filter(survey => 
-    (statusFilter === 'all' || survey.status === statusFilter) &&
-    (survey.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     survey.description.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const handleTakeSurvey = (id: string) => {
+    // This will be handled by the SurveyCard component internally now
+    console.log('Viewing survey details:', id);
+  };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div className="text-red-600 p-4">{error}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -78,9 +75,9 @@ export function SurveyCenter() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredSurveys.map((survey) => (
+        {surveys.map((survey) => (
           <SurveyCard
-            key={survey.id}
+            key={survey._id}
             survey={survey}
             onTakeSurvey={handleTakeSurvey}
           />

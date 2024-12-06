@@ -4,7 +4,10 @@ import { Users } from 'lucide-react';
 import { FormField } from '../FormField';
 
 export function EnrollmentFields() {
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-6">

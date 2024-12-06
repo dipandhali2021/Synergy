@@ -1,40 +1,71 @@
-import React, { useState } from 'react';
-import { Search, Filter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, UserPlus } from 'lucide-react';
 import { StakeholderCard } from './StakeholderCard';
-
-const mockStakeholders = [
-  {
-    id: '1',
-    name: 'Dr. Sarah Johnson',
-    role: 'School Administrator',
-    organization: 'Central High School',
-    location: 'Kerala',
-    email: 'sarah.johnson@school.edu',
-    phone: '+91 98765 43210',
-    expertise: ['Infrastructure Planning', 'Grade Reconfiguration', 'Teacher Training'],
-  },
-  {
-    id: '2',
-    name: 'Prof. Rajesh Kumar',
-    role: 'Education Policy Expert',
-    organization: 'State Education Board',
-    location: 'West Bengal',
-    email: 'rajesh.kumar@edu.gov.in',
-    phone: '+91 98765 43211',
-    expertise: ['Policy Implementation', 'Standardization', 'Resource Management'],
-  }
-];
+import { AddContactForm } from './AddContactForm';
+import { directoryService } from '../../../services/directoryService';
+import { Stakeholder } from '../../../types/directory';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export function StakeholderDirectory() {
+  const [stakeholders, setStakeholders] = useState<Stakeholder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
+  const [showAddForm, setShowAddForm] = useState(false);
+  const { user } = useAuth();
 
-  const handleConnect = (id: string) => {
-    console.log('Connecting with stakeholder:', id);
+  useEffect(() => {
+    fetchStakeholders();
+  }, [roleFilter, locationFilter]);
+
+  const fetchStakeholders = async () => {
+    try {
+      setLoading(true);
+      const params: Record<string, any> = {};
+      if (roleFilter !== 'all') params.role = roleFilter;
+      if (locationFilter !== 'all') params.location = locationFilter;
+
+      const response = await directoryService.getStakeholders(params);
+      setStakeholders(response.stakeholders);
+    } catch (err) {
+      setError('Failed to fetch stakeholders');
+      console.error('Error fetching stakeholders:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredStakeholders = mockStakeholders.filter(stakeholder => {
+  const handleConnect = async (stakeholderId: string) => {
+    if (!user) {
+      setError('Please login to connect with stakeholders');
+      return;
+    }
+
+    try {
+      await directoryService.requestConnection(stakeholderId);
+      fetchStakeholders();
+    } catch (err) {
+      setError('Failed to send connection request');
+      console.error('Error sending connection request:', err);
+    }
+  };
+
+  const handleAddContact = async (data: any) => {
+    console.log(data);
+    try {
+      await directoryService.createStakeholder(data);
+      setShowAddForm(false);
+      fetchStakeholders();
+    } catch (err) {
+      setError('Failed to add contact');
+      console.error('Error adding contact:', err);
+    }
+  };
+
+  const filteredStakeholders = stakeholders.filter(stakeholder => {
     const matchesSearch = 
       stakeholder.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       stakeholder.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,16 +73,32 @@ export function StakeholderDirectory() {
         skill.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-    const matchesRole = roleFilter === 'all' || stakeholder.role === roleFilter;
-    const matchesLocation = locationFilter === 'all' || stakeholder.location === locationFilter;
-
-    return matchesSearch && matchesRole && matchesLocation;
+    return matchesSearch;
   });
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Stakeholder Directory</h2>
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+        >
+          <UserPlus className="h-5 w-5" />
+          Add Contact
+        </button>
       </div>
 
       <div className="flex gap-4">
@@ -74,6 +121,7 @@ export function StakeholderDirectory() {
           <option value="School Administrator">School Administrators</option>
           <option value="Education Policy Expert">Policy Experts</option>
           <option value="Teacher">Teachers</option>
+          <option value="Support Staff">Support Staff</option>
         </select>
         <select
           value={locationFilter}
@@ -84,18 +132,26 @@ export function StakeholderDirectory() {
           <option value="Kerala">Kerala</option>
           <option value="West Bengal">West Bengal</option>
           <option value="Mizoram">Mizoram</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
         </select>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
         {filteredStakeholders.map((stakeholder) => (
           <StakeholderCard
-            key={stakeholder.id}
+            key={stakeholder._id}
             stakeholder={stakeholder}
             onConnect={handleConnect}
           />
         ))}
       </div>
+
+      {showAddForm && (
+        <AddContactForm
+          onSubmit={handleAddContact}
+          onClose={() => setShowAddForm(false)}
+        />
+      )}
     </div>
   );
 }

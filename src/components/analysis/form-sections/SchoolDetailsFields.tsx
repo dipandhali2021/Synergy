@@ -4,7 +4,10 @@ import { Building2, Calendar } from 'lucide-react';
 import { FormField } from '../FormField';
 
 export function SchoolDetailsFields() {
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-6">
@@ -36,8 +39,12 @@ export function SchoolDetailsFields() {
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select Management</option>
-            <option value="1-Department of Education">Department of Education</option>
-            <option value="2-Tribal Welfare Department">Tribal Welfare Department</option>
+            <option value="1-Department of Education">
+              Department of Education
+            </option>
+            <option value="2-Tribal Welfare Department">
+              Tribal Welfare Department
+            </option>
             <option value="3-Local Body">Local Body</option>
             <option value="4-Private Aided">Private Aided</option>
             <option value="5-Private Unaided">Private Unaided</option>

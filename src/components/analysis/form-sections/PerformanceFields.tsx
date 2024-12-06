@@ -4,7 +4,10 @@ import { TrendingUp, Users, Building2 } from 'lucide-react';
 import { FormField } from '../FormField';
 
 export function PerformanceFields() {
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-6">

@@ -4,7 +4,10 @@ import { Building2 } from 'lucide-react';
 import { FormField } from '../FormField';
 
 export function InfrastructureFields() {
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-6">
@@ -21,7 +24,9 @@ export function InfrastructureFields() {
           <option value="1-Private">Private</option>
           <option value="2-Rented">Rented</option>
           <option value="3-Government">Government</option>
-          <option value="4-Government school in a rent free building">Government school in a rent free building</option>
+          <option value="4-Government school in a rent free building">
+            Government school in a rent free building
+          </option>
         </select>
       </FormField>
 

@@ -1,21 +1,15 @@
 import React from 'react';
-import { AlertCircle, Calendar, ArrowRight } from 'lucide-react';
+import { AlertCircle, Calendar, ArrowRight, Archive } from 'lucide-react';
 import { format } from 'date-fns';
+import { Policy } from '../../../types/policy';
 
 interface PolicyCardProps {
-  policy: {
-    id: string;
-    title: string;
-    summary: string;
-    category: string;
-    publishedAt: string;
-    effectiveDate: string;
-    importance: 'high' | 'medium' | 'low';
-  };
+  policy: Policy;
   onViewDetails: (id: string) => void;
+  onArchive: (id: string) => void;
 }
 
-export function PolicyCard({ policy, onViewDetails }: PolicyCardProps) {
+export function PolicyCard({ policy, onViewDetails, onArchive }: PolicyCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-start gap-4">
@@ -48,7 +42,7 @@ export function PolicyCard({ policy, onViewDetails }: PolicyCardProps) {
           <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              <span>Published: {format(new Date(policy.publishedAt), 'MMM d, yyyy')}</span>
+              <span>Published: {format(new Date(policy.createdAt), 'MMM d, yyyy')}</span>
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
@@ -56,13 +50,27 @@ export function PolicyCard({ policy, onViewDetails }: PolicyCardProps) {
             </div>
           </div>
 
-          <button
-            onClick={() => onViewDetails(policy.id)}
-            className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800"
-          >
-            View Details
-            <ArrowRight className="h-4 w-4" />
-          </button>
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-500">
+              {policy.author.name} • {policy.status}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onArchive(policy._id)}
+                className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:text-gray-800"
+              >
+                <Archive className="h-4 w-4" />
+                Archive
+              </button>
+              <button
+                onClick={() => onViewDetails(policy._id)}
+                className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800"
+              >
+                View Details
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

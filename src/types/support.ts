@@ -1,37 +1,48 @@
-export interface GuideStep {
-  id: string;
-  title: string;
+import { User } from './auth';
+
+export type TicketStatus = 'open' | 'in-progress' | 'resolved' | 'closed';
+export type TicketPriority = 'low' | 'medium' | 'high';
+export type TicketCategory = 'technical' | 'account' | 'policy' | 'other';
+
+export interface SupportTicket {
+  _id: string;
+  subject: string;
   description: string;
-  duration: string;
-  status: 'not-started' | 'in-progress' | 'completed';
+  category: TicketCategory;
+  priority: TicketPriority;
+  status: TicketStatus;
+  creator: User;
+  assignedTo?: User;
+  createdAt: string;
+  updatedAt: string;
+  attachments?: string[];
+  comments: TicketComment[];
 }
 
-export interface Guide {
-  id: string;
-  title: string;
-  description: string;
-  category: 'infrastructure' | 'academic' | 'administrative';
-  steps: GuideStep[];
-  estimatedDuration: string;
+export interface TicketComment {
+  _id: string;
+  content: string;
+  author: User;
+  user: string;
+  createdAt: string;
+  attachments?: string[];
 }
 
-export interface TrainingModule {
-  id: string;
-  title: string;
+export interface CreateTicketData {
+  subject: string;
   description: string;
-  topics: string[];
-  duration: string;
-  level: 'basic' | 'intermediate' | 'advanced';
-  completionRate?: number;
+  category: TicketCategory;
+  priority: TicketPriority;
+  attachments?: File[];
 }
 
-export interface CaseStudy {
-  id: string;
-  schoolName: string;
-  location: string;
-  challenge: string;
-  solution: string;
-  impact: string;
-  timeline: string;
-  imageUrl: string;
+export interface UpdateTicketData {
+  status?: TicketStatus;
+  priority?: TicketPriority;
+  assignedTo?: string;
+}
+
+export interface CreateCommentData {
+  content: string;
+  attachments?: File[];
 }

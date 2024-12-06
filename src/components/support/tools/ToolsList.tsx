@@ -1,4 +1,5 @@
 import React from 'react';
+import { ResourcePlanningCalculator } from '../../calculators/ResourcePlanningCalculator';
 import {
   ArrowLeft,
   FileSpreadsheet,
@@ -11,45 +12,62 @@ interface ToolsListProps {
   onBack: () => void;
 }
 
-const implementationTools = [
-  {
-    id: 'resource-calculator',
-    title: 'Resource Planning Calculator',
-    description:
-      'Calculate required resources based on student population and grade structure',
-    icon: Calculator,
-    link: 'https://docs.google.com/spreadsheets/create',
-    category: 'planning',
-  },
-  {
-    id: 'transition-template',
-    title: 'Transition Plan Template',
-    description:
-      'Customizable template for planning and tracking your standardization journey',
-    icon: FileSpreadsheet,
-    link: 'https://docs.google.com/spreadsheets/create',
-    category: 'planning',
-  },
-  {
-    id: 'compliance-checklist',
-    title: 'Compliance Checklist',
-    description:
-      'Comprehensive checklist to ensure alignment with standardization requirements',
-    icon: FileText,
-    link: 'https://docs.google.com/document/create',
-    category: 'compliance',
-  },
-  {
-    id: 'progress-tracker',
-    title: 'Progress Tracking Dashboard',
-    description: 'Interactive dashboard to monitor implementation progress',
-    icon: BarChart2,
-    link: '/progress',
-    category: 'monitoring',
-  },
-];
-
 export function ToolsList() {
+  const [selectedTool, setSelectedTool] = React.useState<string | null>(null);
+
+  if (selectedTool === 'resource-calculator') {
+    return (
+      <div className="space-y-6">
+        <button
+          onClick={() => setSelectedTool(null)}
+          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Tools
+        </button>
+
+        <ResourcePlanningCalculator />
+      </div>
+    );
+  }
+
+  const implementationTools = [
+    {
+      id: 'resource-calculator',
+      title: 'Resource Planning Calculator',
+      description:
+        'Calculate required resources based on student population and grade structure',
+      icon: Calculator,
+      category: 'planning',
+    },
+    {
+      id: 'transition-template',
+      title: 'Transition Plan Template',
+      description:
+        'Customizable template for planning and tracking your standardization journey',
+      icon: FileSpreadsheet,
+      link: 'https://docs.google.com/spreadsheets/create',
+      category: 'planning',
+    },
+    {
+      id: 'compliance-checklist',
+      title: 'Compliance Checklist',
+      description:
+        'Comprehensive checklist to ensure alignment with standardization requirements',
+      icon: FileText,
+      link: 'https://docs.google.com/document/create',
+      category: 'compliance',
+    },
+    {
+      id: 'progress-tracker',
+      title: 'Progress Tracking Dashboard',
+      description: 'Interactive dashboard to monitor implementation progress',
+      icon: BarChart2,
+      link: '/progress',
+      category: 'monitoring',
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <button className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800">
@@ -61,12 +79,16 @@ export function ToolsList() {
         {implementationTools.map((tool) => {
           const Icon = tool.icon;
           return (
-            <a
+            <button
               key={tool.id}
-              href={tool.link}
-              target={tool.link.startsWith('http') ? '_blank' : '_self'}
-              rel={tool.link.startsWith('http') ? 'noopener noreferrer' : ''}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all group"
+              onClick={() => {
+                if (tool.link) {
+                  window.open(tool.link, '_blank');
+                } else {
+                  setSelectedTool(tool.id);
+                }
+              }}
+              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all group text-left"
             >
               <div className="flex items-start gap-4">
                 <div className="p-3 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100">
@@ -77,7 +99,7 @@ export function ToolsList() {
                   <p className="text-gray-600 text-sm">{tool.description}</p>
                 </div>
               </div>
-            </a>
+            </button>
           );
         })}
       </div>

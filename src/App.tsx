@@ -17,6 +17,8 @@ import { TrainingList } from './components/support/training/TrainingList';
 import { ToolsList } from './components/support/tools/ToolsList';
 import { BestPracticesList } from './components/support/practices/BestPracticesList';
 import { ResourceAllocationPage } from './pages/ResourceAllocationPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { SchoolDetailPage } from './pages/SchoolDetailPage';
 
 export default function App() {
   return (
@@ -31,6 +33,7 @@ export default function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/analysis" element={<AnalysisPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/report" element={<AIAnalysisResult />} />
                 <Route
                   path="/standardization"
@@ -57,6 +60,7 @@ export default function App() {
                 <Route path="/progress" element={<ProgressPage />} />
                 <Route path="/engagement" element={<EngagementPage />} />
                 <Route path="/schools" element={<KnowYourSchoolPage />} />
+                <Route path="/detail/:id" element={<SchoolDetailPage />} />
               </Routes>
             </main>
           </div>

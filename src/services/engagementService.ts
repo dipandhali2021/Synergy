@@ -33,7 +33,7 @@ export const getForumPosts = async (): Promise<ForumPost[]> => {
   });
 };
 
-export const getActiveSurveys = async (): Promise<Survey[]> => {
+export const getActiveSurveys = async (): Promise<any[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([

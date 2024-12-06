@@ -1,66 +1,76 @@
-import React, { useState } from 'react';
-import { Search, Filter, Calendar as CalendarIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Calendar as CalendarIcon, Plus } from 'lucide-react';
 import { EventCard } from './EventCard';
-
-const mockEvents = [
-  {
-    id: '1',
-    title: 'Grade Reconfiguration Workshop',
-    description: 'Interactive session on implementing grade structure changes effectively',
-    date: '2024-04-15',
-    startTime: '10:00 AM',
-    endTime: '12:00 PM',
-    location: 'Zoom Virtual Meeting',
-    type: 'online' as const,
-    category: 'workshop',
-    attendees: 45,
-    maxAttendees: 100,
-    registrationDeadline: '2024-04-10'
-  },
-  {
-    id: '2',
-    title: 'Infrastructure Planning Conference',
-    description: 'Annual conference on school infrastructure development and management',
-    date: '2024-04-20',
-    startTime: '9:00 AM',
-    endTime: '5:00 PM',
-    location: 'Convention Center, Kerala',
-    type: 'in-person' as const,
-    category: 'conference',
-    attendees: 120,
-    maxAttendees: 150,
-    registrationDeadline: '2024-04-15'
-  }
-];
+import { NewEventForm } from './NewEventForm';
+import { CalendarView } from './CalendarView';
+import { eventService } from '../../../services/eventService';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 export function EventsCalendar() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [showNewEventForm, setShowNewEventForm] = useState(false);
+  const [showCalendarView, setShowCalendarView] = useState(false);
 
-  const handleRegister = (id: string) => {
-    console.log('Registering for event:', id);
+  useEffect(() => {
+    fetchEvents();
+  }, [searchTerm, typeFilter, categoryFilter]);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const params: Record<string, any> = {};
+      
+      if (searchTerm) params.search = searchTerm;
+      if (typeFilter !== 'all') params.type = typeFilter;
+      if (categoryFilter !== 'all') params.category = categoryFilter;
+
+      const response = await eventService.getEvents(params);
+      setEvents(response.events);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch events');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredEvents = mockEvents.filter(event => {
-    const matchesSearch = 
-      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.description.toLowerCase().includes(searchTerm.toLowerCase());
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-    const matchesType = typeFilter === 'all' || event.type === typeFilter;
-    const matchesCategory = categoryFilter === 'all' || event.category === categoryFilter;
-
-    return matchesSearch && matchesType && matchesCategory;
-  });
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Events & Webinars</h2>
-        <button className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg">
-          <CalendarIcon className="h-5 w-5" />
-          View Calendar
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowNewEventForm(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          >
+            <Plus className="h-5 w-5" />
+            Create Event
+          </button>
+          <button 
+            onClick={() => setShowCalendarView(true)}
+            className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg"
+          >
+            <CalendarIcon className="h-5 w-5" />
+            View Calendar
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-4">
@@ -98,14 +108,28 @@ export function EventsCalendar() {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {filteredEvents.map((event) => (
+        {events.map((event) => (
           <EventCard
-            key={event.id}
+            key={event._id}
             event={event}
-            onRegister={handleRegister}
+            onUpdate={fetchEvents}
           />
         ))}
       </div>
+
+      {showNewEventForm && (
+        <NewEventForm
+          onClose={() => setShowNewEventForm(false)}
+          onEventCreated={fetchEvents}
+        />
+      )}
+
+      {showCalendarView && (
+        <CalendarView
+          events={events}
+          onClose={() => setShowCalendarView(false)}
+        />
+      )}
     </div>
   );
 }
