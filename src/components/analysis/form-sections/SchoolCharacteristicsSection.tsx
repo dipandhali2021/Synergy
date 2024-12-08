@@ -1,77 +1,94 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Building2, BookOpen, Users } from 'lucide-react';
-import { FormField } from '../FormField';
+import { Building2, School } from 'lucide-react';
 
-export function SchoolCharacteristicsSection() {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+interface SchoolCharacteristicsSectionProps {
+  formData: any;
+  onChange: (field: string, value: any) => void;
+  errors: Record<string, string>;
+}
 
+export function SchoolCharacteristicsSection({
+  formData,
+  onChange,
+  errors,
+}: SchoolCharacteristicsSectionProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          label="School Category"
-          icon={Building2}
-          error={errors?.schoolCategory?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <School className="h-4 w-4 text-gray-500" />
+              School Category
+            </div>
+          </label>
           <select
-            {...register('schoolCategory')}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.schoolCategory}
+            onChange={(e) => onChange('schoolCategory', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select category</option>
             <option value="government">Government</option>
             <option value="private">Private</option>
           </select>
-        </FormField>
+        </div>
 
-        <FormField
-          label="School Management"
-          icon={Building2}
-          error={errors?.schoolManagement?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-gray-500" />
+              School Management
+            </div>
+          </label>
           <select
-            {...register('schoolManagement')}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.schoolManagement}
+            onChange={(e) => onChange('schoolManagement', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select management type</option>
             <option value="private">Private</option>
             <option value="government">Government</option>
+            <option value="aided">Aided</option>
+            <option value="unaided">Unaided</option>
           </select>
-        </FormField>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          label="Medium of Instruction"
-          icon={BookOpen}
-          error={errors?.mediumOfInstruction?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <School className="h-4 w-4 text-gray-500" />
+              Medium of Instruction
+            </div>
+          </label>
           <input
-            {...register('mediumOfInstruction')}
             type="text"
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.mediumOfInstruction}
+            onChange={(e) => onChange('mediumOfInstruction', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
             placeholder="Enter medium of instruction"
           />
-        </FormField>
+        </div>
 
-        <FormField
-          label="School Type"
-          icon={Building2}
-          error={errors?.schoolType?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-gray-500" />
+              School Type
+            </div>
+          </label>
           <select
-            {...register('schoolType')}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.schoolType}
+            onChange={(e) => onChange('schoolType', e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select school type</option>
-            <option value="primary">Primary</option>
-            <option value="secondary">Secondary</option>
-            <option value="higher_secondary">Higher Secondary</option>
+            <option value="co-educational">Co-Educational</option>
+            <option value="boys">Boys</option>
+            <option value="girls">Girls</option>
           </select>
-        </FormField>
+        </div>
       </div>
     </div>
   );

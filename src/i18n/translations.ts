@@ -18,6 +18,17 @@ export const translations = {
     'metrics.quality': 'Quality Score',
     'metrics.performance': 'Performance',
     'metrics.resources': 'Resources',
+    "app.title": "Synergy | Horizon",
+    "nav.schools": "Schools",
+    "nav.analysis": "Analysis",
+    "nav.standardization": "Standardization",
+    "nav.progress": "Progress",
+    "nav.resourceAllocation": "Resource Allocation",
+    "nav.engagement": "Engagement",
+    "auth.login": "Login",
+    "auth.register": "Register",
+    "auth.logout": "Logout"
+
   },
   hi: {
     'search.placeholder': 'स्कूल का नाम, UDISE कोड, या स्थान खोजें...',
@@ -38,6 +49,17 @@ export const translations = {
     'metrics.quality': 'गुणवत्ता स्कोर',
     'metrics.performance': 'प्रदर्शन',
     'metrics.resources': 'संसाधन',
+    "app.title": "सिनर्जी | होराइजन",
+    "nav.schools": "स्कूल",
+    "nav.analysis": "विश्लेषण",
+    "nav.standardization": "मानकीकरण",
+    "nav.progress": "प्रगति",
+    "nav.resourceAllocation": "संसाधन आवंटन",
+    "nav.engagement": "व्यापकता",
+    "auth.login": "लॉग इन करें",
+    "auth.register": "रजिस्टर करें",
+    "auth.logout": "लॉग आउट करें"
+    
   },
   // Add more languages as needed
 };

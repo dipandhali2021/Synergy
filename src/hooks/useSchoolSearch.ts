@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { School, SchoolFilters } from '../types/school';
-import { searchSchools } from '../services/schoolService';
+import { schoolService } from '../services/schoolService';
 
 export function useSchoolSearch() {
   const [schools, setSchools] = useState<School[]>([]);
@@ -23,7 +23,11 @@ export function useSchoolSearch() {
       try {
         setLoading(true);
         setError(null);
-        const { schools, total } = await searchSchools(searchTerm, filters, currentPage);
+        const { schools, total } = await schoolService.searchSchools(
+          searchTerm,
+          filters,
+          currentPage
+        );
         setSchools(schools);
         setTotalResults(total);
       } catch (err) {

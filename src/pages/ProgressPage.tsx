@@ -6,6 +6,7 @@ import { SchoolProgress } from '../components/progress/school/SchoolProgress';
 import { ComparativeAnalysis } from '../components/progress/comparative/ComparativeAnalysis';
 import { ChallengesDashboard } from '../components/progress/challenges/ChallengesDashboard';
 import { ReportsDashboard } from '../components/progress/reports/ReportsDashboard';
+import { SchoolProgressDashboard } from '../components/progress/school/SchoolProgressDashboard';
 
 type TabType = 'national' | 'regional' | 'school' | 'comparative' | 'challenges' | 'reports';
 
@@ -19,7 +20,7 @@ export function ProgressPage() {
       case 'regional':
         return <RegionalProgress />;
       case 'school':
-        return <SchoolProgress />;
+        return <SchoolProgressDashboard />;
       case 'comparative':
         return <ComparativeAnalysis />;
       case 'challenges':

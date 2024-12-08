@@ -1,14 +1,17 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
 import { Shield, Droplets, Sun, AlertTriangle } from 'lucide-react';
-import { FormField } from '../FormField';
 
-export function SafetyFields() {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+interface SafetyFieldsProps {
+  formData: any;
+  onChange: (field: string, value: any) => void;
+  errors: Record<string, string>;
+}
 
+export function SafetyFields({
+  formData,
+  onChange,
+  errors,
+}: SafetyFieldsProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -17,7 +20,8 @@ export function SafetyFields() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('earthquakeCompliant')}
+              checked={formData.earthquakeCompliant}
+              onChange={(e) => onChange('earthquakeCompliant', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Earthquake Safety Compliant</span>
@@ -26,7 +30,8 @@ export function SafetyFields() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('fireCompliant')}
+              checked={formData.fireCompliant}
+              onChange={(e) => onChange('fireCompliant', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Fire Safety Compliant</span>
@@ -35,7 +40,8 @@ export function SafetyFields() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('emergencyExits')}
+              checked={formData.emergencyExits}
+              onChange={(e) => onChange('emergencyExits', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Emergency Exits Available</span>
@@ -47,7 +53,8 @@ export function SafetyFields() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('rainwaterHarvesting')}
+              checked={formData.rainwaterHarvesting}
+              onChange={(e) => onChange('rainwaterHarvesting', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <div className="flex items-center gap-2">
@@ -59,7 +66,8 @@ export function SafetyFields() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('solarPower')}
+              checked={formData.solarPower}
+              onChange={(e) => onChange('solarPower', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <div className="flex items-center gap-2">
@@ -71,30 +79,36 @@ export function SafetyFields() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          label="Distance from Nearest Habitation (km)"
-          icon={Shield}
-          error={errors?.distanceFromHabitation?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Distance from Nearest Habitation (km)
+          </label>
           <input
             type="number"
             step="0.1"
-            {...register('distanceFromHabitation', { valueAsNumber: true })}
+            value={formData.distanceFromHabitation || ''}
+            onChange={(e) => onChange('distanceFromHabitation', parseFloat(e.target.value))}
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           />
-        </FormField>
+          {errors.distanceFromHabitation && (
+            <p className="mt-1 text-sm text-red-600">{errors.distanceFromHabitation}</p>
+          )}
+        </div>
 
-        <FormField
-          label="Emergency Response Time (minutes)"
-          icon={AlertTriangle}
-          error={errors?.emergencyResponseTime?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Emergency Response Time (minutes)
+          </label>
           <input
             type="number"
-            {...register('emergencyResponseTime', { valueAsNumber: true })}
+            value={formData.emergencyResponseTime || ''}
+            onChange={(e) => onChange('emergencyResponseTime', parseInt(e.target.value))}
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           />
-        </FormField>
+          {errors.emergencyResponseTime && (
+            <p className="mt-1 text-sm text-red-600">{errors.emergencyResponseTime}</p>
+          )}
+        </div>
       </div>
     </div>
   );

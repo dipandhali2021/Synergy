@@ -7,7 +7,7 @@ export const analysisFormSchema = z.object({
   state: z.string().min(1, 'State is required'),
   district: z.string().min(1, 'District is required'),
   block: z.string().min(1, 'Block is required'),
-  ruralUrban: z.enum(['1-Rural', '2-Urban']),
+  ruralUrban: z.enum(['rural', 'urban']),
   cluster: z.string().min(1, 'Cluster is required'),
   village: z.string().min(1, 'Village is required'),
   pincode: z.string().length(6, 'PIN code must be 6 digits'),

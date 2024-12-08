@@ -60,7 +60,7 @@ export default function App() {
                 <Route path="/progress" element={<ProgressPage />} />
                 <Route path="/engagement" element={<EngagementPage />} />
                 <Route path="/schools" element={<KnowYourSchoolPage />} />
-                <Route path="/detail/:id" element={<SchoolDetailPage />} />
+                <Route path="/school/detail/:id" element={<SchoolDetailPage />} />
               </Routes>
             </main>
           </div>

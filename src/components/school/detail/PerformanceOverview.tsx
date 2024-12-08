@@ -15,28 +15,28 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import { SchoolDetail } from '../../../types/schoolDetail';
 
 interface PerformanceOverviewProps {
-  school: School;
+  school: SchoolDetail;
 }
 
+
+
 export function PerformanceOverview({ school }: PerformanceOverviewProps) {
+  const performanceOverview = school.performanceOverview;
   const performanceData = [
-    { metric: 'Academic Achievement', value: 85 },
-    { metric: 'Teacher-Student Ratio', value: 75 },
-    { metric: 'Infrastructure', value: 90 },
-    { metric: 'Resource Availability', value: 70 },
-    { metric: 'Special Education', value: 65 },
+    { metric: 'Academic Achievement', value: performanceOverview.academicAchievement },
+    { metric: 'Teacher-Student Ratio', value: performanceOverview.teacherStudentRatio },
+    { metric: 'Infrastructure', value: performanceOverview.infrastructure },
+    { metric: 'Resource Availability', value: performanceOverview.resourceAvailability },
   ];
 
-  const trendData = [
-    { month: 'Jan', performance: 82, attendance: 88 },
-    { month: 'Feb', performance: 84, attendance: 85 },
-    { month: 'Mar', performance: 86, attendance: 87 },
-    { month: 'Apr', performance: 83, attendance: 89 },
-    { month: 'May', performance: 88, attendance: 86 },
-    { month: 'Jun', performance: 85, attendance: 88 },
-  ];
+  const trendData = school.performanceTrends.map((item) => ({
+    month: item.month,
+    performance: item.performance,
+    attendance: item.attendance,
+  }));
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

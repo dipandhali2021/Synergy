@@ -15,6 +15,13 @@ import directoryRoutes from './routes/directoryRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import policyRoutes from './routes/policyRoutes.js';
 import schoolRoutes from './routes/schoolRoutes.js';
+import schooldetailRoutes from './routes/schoolDetailRoutes.js';
+import regionalProgressRoutes from './routes/regionalProgressRoutes.js';
+import schoolProgressRoutes from './routes/schoolProgressRoutes.js';
+import comparativeProgressRoutes from './routes/comparativeProgressRoutes.js';
+import challengesRoutes from './routes/challengesRoutes.js';
+import reportRoutes from './routes/reportsRoutes.js';
+import chatBotRoutes from './routes/chatBotRoutes.js';
 
 dotenv.config();
 
@@ -41,8 +48,15 @@ app.use('/api/events', eventRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/directory', directoryRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/regional-progress', regionalProgressRoutes);
+app.use('/api/school-progress', schoolProgressRoutes);
+app.use('/api/comparative-progress', comparativeProgressRoutes);
+app.use('/api/challenges', challengesRoutes);
+app.use('/api/reports', reportRoutes);
 app.use('/api/policies', policyRoutes);
 app.use('/api/schools', schoolRoutes);
+app.use('/api/school/details', schooldetailRoutes);
+app.use('/api/chatbot', chatBotRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

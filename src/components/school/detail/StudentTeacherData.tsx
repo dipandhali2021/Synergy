@@ -14,26 +14,33 @@ import {
   Legend,
 } from 'recharts';
 import { Users, GraduationCap } from 'lucide-react';
+import { SchoolDetail } from '../../../types/schoolDetail';
 
 interface StudentTeacherDataProps {
-  school: School;
+  school: SchoolDetail;
 }
 
 export function StudentTeacherData({ school }: StudentTeacherDataProps) {
+  // Extract and transform student demographics data
+  const demographics = school.studentDemographics;
+  const totalStudents = school.totalStudents;
   const studentDemographics = [
-    { name: 'General', value: 60 },
-    { name: 'SC', value: 15 },
-    { name: 'ST', value: 10 },
-    { name: 'OBC', value: 15 },
+    { name: 'General', value: (demographics.general / totalStudents) * 100 },
+    { name: 'SC', value: (demographics.SC / totalStudents) * 100 },
+    { name: 'ST', value: (demographics.ST / totalStudents) * 100 },
+    { name: 'OBC', value: (demographics.OBC / totalStudents) * 100 },
   ];
 
+  // Extract and transform teacher qualifications data
+  const qualifications = school.teacherQualifications;
   const teacherQualifications = [
-    { qualification: 'Ph.D', count: 2 },
-    { qualification: 'Post Graduate', count: 15 },
-    { qualification: 'Graduate', count: 20 },
-    { qualification: 'Other', count: 3 },
+    { qualification: 'Ph.D', count: qualifications.PhD },
+    { qualification: 'Post Graduate', count: qualifications.postGraduate },
+    { qualification: 'Graduate', count: qualifications.graduate },
+    { qualification: 'Other', count: qualifications.other },
   ];
 
+  // Define colors for charts
   const COLORS = ['#4f46e5', '#06b6d4', '#8b5cf6', '#f59e0b'];
 
   return (
@@ -47,7 +54,7 @@ export function StudentTeacherData({ school }: StudentTeacherDataProps) {
             </div>
             <div>
               <div className="text-sm text-gray-500">Total Students</div>
-              <div className="text-2xl font-bold">{school.studentCount}</div>
+              <div className="text-2xl font-bold">{school.totalStudents}</div>
             </div>
           </div>
           <div className="mt-4">
@@ -72,7 +79,7 @@ export function StudentTeacherData({ school }: StudentTeacherDataProps) {
             </div>
             <div>
               <div className="text-sm text-gray-500">Total Teachers</div>
-              <div className="text-2xl font-bold">{school.teacherCount}</div>
+              <div className="text-2xl font-bold">{school.totalTeachers}</div>
             </div>
           </div>
           <div className="mt-4">
@@ -80,7 +87,7 @@ export function StudentTeacherData({ school }: StudentTeacherDataProps) {
               Student-Teacher Ratio
             </div>
             <div className="text-3xl font-bold text-indigo-600">
-              {Math.round(school.studentCount / school.teacherCount)}:1
+              {Math.round(school.totalStudents / school.totalTeachers)}:1
             </div>
           </div>
         </div>
@@ -100,7 +107,7 @@ export function StudentTeacherData({ school }: StudentTeacherDataProps) {
                   outerRadius={100}
                   paddingAngle={5}
                   dataKey="value"
-                  label={({ name, value }) => `${name}: ${value}%`}
+                  label={({ name, value }) => `${name}: ${value.toFixed(2)}%`}
                 >
                   {studentDemographics.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index]} />

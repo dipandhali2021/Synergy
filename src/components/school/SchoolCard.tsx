@@ -10,7 +10,6 @@ import {
   Star,
   BookOpen,
   Award,
-  Heart,
   Eye,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -35,24 +34,8 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
     }
   };
 
-  const getQualityScore = () => {
-    const infrastructureScore = school.facilities.length * 10;
-    const performanceScore =
-      school.performanceBand === 'Excellent'
-        ? 40
-        : school.performanceBand === 'Satisfactory'
-        ? 30
-        : 20;
-    const teacherRatioScore = Math.min(
-      30,
-      (school.studentCount / school.teacherCount) * 2
-    );
-
-    return Math.min(
-      100,
-      infrastructureScore + performanceScore + teacherRatioScore
-    );
-  };
+  console.log(school);
+ 
 
   return (
     <motion.div
@@ -72,7 +55,7 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold text-indigo-600">
-            {getQualityScore()}
+            {school.qualityScore}
           </div>
           <div className="text-xs text-gray-500">Quality Score</div>
         </div>
@@ -130,8 +113,8 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
             onClick={onViewDetails}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
           >
-             <Link
-              to={`/detail/${school.id}`}
+            <Link
+              to={`/school/detail/${school.id}`}
               className="flex items-center gap-2"
             >
               <Eye className="h-4 w-4" />
@@ -150,7 +133,7 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
           <div className="mt-2 bg-yellow-100 rounded-full h-2">
             <div
               className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
-              style={{ width: '20%' }}
+              style={{ width: school.qualityScore + '%' }}
             />
           </div>
         </div>

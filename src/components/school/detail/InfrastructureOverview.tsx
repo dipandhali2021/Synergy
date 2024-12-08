@@ -13,33 +13,54 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import { SchoolDetail } from '../../../types/schoolDetail';
 
 interface InfrastructureOverviewProps {
-  school: School;
+  school: SchoolDetail;
 }
 
 export function InfrastructureOverview({ school }: InfrastructureOverviewProps) {
+  const classroomConditionTotals =
+    school.classroomCondition.goodCondition +
+    school.classroomCondition.minorRepair +
+    school.classroomCondition.majorRepair;
+
   const classroomConditionData = [
-    { name: 'Good Condition', value: 80 },
-    { name: 'Minor Repair', value: 15 },
-    { name: 'Major Repair', value: 5 },
+    {
+      name: 'Good Condition',
+      value:
+        (school.classroomCondition.goodCondition / classroomConditionTotals) *
+        100,
+    },
+    {
+      name: 'Minor Repair',
+      value:
+        (school.classroomCondition.minorRepair / classroomConditionTotals) *
+        100,
+    },
+    {
+      name: 'Major Repair',
+      value:
+        (school.classroomCondition.majorRepair / classroomConditionTotals) *
+        100,
+    },
   ];
 
   const resourceDistributionData = [
     {
       category: 'Teaching Staff',
-      current: school.teacherCount,
-      required: Math.ceil(school.studentCount / 30),
+      current: school.resourceDistribution.teachingStaff.current,
+      required: school.resourceDistribution.teachingStaff.required,
     },
     {
       category: 'Classrooms',
-      current: Math.ceil(school.studentCount / 40),
-      required: Math.ceil(school.studentCount / 30),
+      current: school.resourceDistribution.classrooms.current,
+      required: school.resourceDistribution.classrooms.required,
     },
     {
       category: 'Labs',
-      current: school.facilities.filter(f => f.includes('Lab')).length,
-      required: 3,
+      current: school.resourceDistribution.labs.current,
+      required: school.resourceDistribution.labs.required,
     },
   ];
 

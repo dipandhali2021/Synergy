@@ -23,6 +23,7 @@ export function calculateResources(data: ResourceCalculation) {
 
   // Calculate building area (rough estimation)
   const classroomArea = classrooms * 56; // 56 sq meters per classroom
+  const washroomArea = washrooms * 30;
   const facilityAreas = {
     library: data.facilities.library ? 150 : 0,
     computerLab: data.facilities.computerLab ? 100 : 0,
@@ -34,11 +35,12 @@ export function calculateResources(data: ResourceCalculation) {
   };
 
   const totalBuildingArea =
-    classroomArea +
+    classroomArea + washroomArea
     Object.values(facilityAreas).reduce((sum, area) => sum + area, 0);
 
   // Calculate estimated costs (rough estimation in INR)
-  const constructionCost = totalBuildingArea * 30000; // 30000 INR per sq meter
+  const constructionCost = totalBuildingArea * 3000; // 30000 INR per sq meter
+  const teachingCost = teachers * 35000;
   const equipmentCost =
     computers * 40000 + // 40000 INR per computer
     (data.facilities.scienceLab ? 1500000 : 0) + // 15 lakhs for science lab
@@ -48,10 +50,10 @@ export function calculateResources(data: ResourceCalculation) {
     (sum, [facility, enabled]) => {
       if (!enabled) return sum;
       const costs: { [key: string]: number } = {
-        artRoom: 500000,
-        musicRoom: 700000,
-        infirmary: 300000,
-        cafeteria: 1000000,
+        artRoom: 200000,
+        musicRoom: 300000,
+        infirmary: 100000,
+        cafeteria: 300000,
       };
       return sum + (costs[facility] || 0);
     },
@@ -66,7 +68,7 @@ export function calculateResources(data: ResourceCalculation) {
     );
   }
 
-  if (data.basicInfo.budget < constructionCost + equipmentCost + facilitiesCost) {
+  if (data.basicInfo.budget < constructionCost + teachingCost+ equipmentCost + facilitiesCost) {
     warnings.push(
       'Estimated total cost exceeds available budget. Consider adjusting requirements or increasing budget.'
     );
@@ -78,9 +80,10 @@ export function calculateResources(data: ResourceCalculation) {
     washrooms,
     computers,
     buildingArea: totalBuildingArea,
-    estimatedCost: constructionCost + equipmentCost + facilitiesCost,
+    estimatedCost: constructionCost +teachingCost+ equipmentCost + facilitiesCost,
     costBreakdown: {
       infrastructure: constructionCost,
+      teaching: teachingCost,
       equipment: equipmentCost,
       facilities: facilitiesCost,
       other: (constructionCost + equipmentCost + facilitiesCost) * 0.1, // 10% contingency

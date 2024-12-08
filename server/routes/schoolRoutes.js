@@ -6,7 +6,8 @@ import {
   getSchoolById,
   addSchool,
   updateSchool,
-  deleteSchool
+  deleteSchool,
+  getSchoolComparison
 } from '../controllers/schoolController.js';
 
 const router = express.Router();
@@ -16,6 +17,9 @@ router.get('/', auth, getAllSchools);
 
 // Get a school by ID
 router.get('/:id', auth, getSchoolById);
+
+// Get school comparison data
+router.get('/:id/comparison', auth, getSchoolComparison);
 
 // Add a new school
 router.post(
@@ -44,6 +48,12 @@ router.post(
     body('teacherCount').isInt({ min: 0 }).withMessage('Invalid teacher count'),
     body('coordinates.lat').isFloat().withMessage('Invalid latitude'),
     body('coordinates.lng').isFloat().withMessage('Invalid longitude'),
+    body('facilities').isArray().withMessage('Facilities must be an array'),
+    body('type')
+      .isIn(['government', 'private', 'aided', 'unaided'])
+      .withMessage('Invalid school type'),
+
+    body('qualityScore').isInt({ min: 0, max: 100 }).withMessage('Invalid quality score'),
   ],
   addSchool
 );
@@ -70,6 +80,9 @@ router.patch(
       .isIn(['Excellent', 'Good', 'Average', 'Poor']),
     body('studentCount').optional().isInt({ min: 0 }),
     body('teacherCount').optional().isInt({ min: 0 }),
+    body('facilities').optional().isArray(),
+    body('type').optional().isIn(['government', 'private', 'aided', 'unaided']),
+    body('qualityScore').optional().isInt({ min: 0, max: 100 }),
     body('coordinates.lat').optional().isFloat(),
     body('coordinates.lng').optional().isFloat(),
   ],

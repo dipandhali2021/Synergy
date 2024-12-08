@@ -1,5 +1,5 @@
 import React from 'react';
-import { School } from '../../../types/school';
+import { SchoolDetail } from '../../../types/schoolDetail';
 import {
   Library,
   Monitor,
@@ -14,29 +14,69 @@ import {
 } from 'lucide-react';
 
 interface FacilitiesOverviewProps {
-  school: School;
+  school: SchoolDetail;
 }
 
 export function FacilitiesOverview({ school }: FacilitiesOverviewProps) {
   const facilities = [
-    { name: 'Library', icon: Library, available: true },
-    { name: 'Computer Lab', icon: Monitor, available: true },
-    { name: 'Drinking Water', icon: Droplets, available: true },
-    { name: 'Electricity', icon: Zap, available: true },
-    { name: 'Internet', icon: Wifi, available: false },
-    { name: 'Science Lab', icon: Activity, available: true },
-    { name: 'Smart Classroom', icon: Monitor, available: false },
-    { name: 'Playground', icon: Activity, available: true },
-    { name: 'Auditorium', icon: Building, available: false },
-    { name: 'Digital Library', icon: BookOpen, available: false },
+    { 
+      name: 'Library', 
+      icon: Library, 
+      available: school.availableFacilities?.library 
+    },
+    { 
+      name: 'Computer Lab', 
+      icon: Monitor, 
+      available: school.availableFacilities?.computerLab 
+    },
+    { 
+      name: 'Drinking Water', 
+      icon: Droplets, 
+      available: school.availableFacilities?.drinkingWater 
+    },
+    { 
+      name: 'Electricity', 
+      icon: Zap, 
+      available: school.availableFacilities?.electricity 
+    },
+    { 
+      name: 'Internet', 
+      icon: Wifi, 
+      available: school.availableFacilities?.internet 
+    },
+    { 
+      name: 'Science Lab', 
+      icon: Activity, 
+      available: school.availableFacilities?.scienceLab 
+    },
+    { 
+      name: 'Smart Classroom', 
+      icon: Monitor, 
+      available: school.availableFacilities?.smartClassroom 
+    },
+    { 
+      name: 'Playground', 
+      icon: Activity, 
+      available: school.availableFacilities?.playground 
+    },
+    { 
+      name: 'Auditorium', 
+      icon: Building, 
+      available: school.availableFacilities?.auditorium 
+    },
+    { 
+      name: 'Digital Library', 
+      icon: BookOpen, 
+      available: school.availableFacilities?.digitalLibrary 
+    },
   ];
 
   const digitalEquipment = [
-    { name: 'Desktops', count: 15 },
-    { name: 'Laptops', count: 5 },
-    { name: 'Projectors', count: 3 },
-    { name: 'Smart Boards', count: 2 },
-    { name: 'Printers', count: 2 },
+    { name: 'Desktops', count: school.digitalEquipment?.desktops || 0 },
+    { name: 'Laptops', count: school.digitalEquipment?.laptops || 0 },
+    { name: 'Projectors', count: school.digitalEquipment?.projectors || 0 },
+    { name: 'Smart Boards', count: school.digitalEquipment?.smartBoards || 0 },
+    { name: 'Printers', count: school.digitalEquipment?.printers || 0 },
   ];
 
   return (
@@ -57,18 +97,22 @@ export function FacilitiesOverview({ school }: FacilitiesOverviewProps) {
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <Icon className={`h-5 w-5 ${
-                    facility.available ? 'text-indigo-600' : 'text-gray-400'
-                  }`} />
+                  <Icon
+                    className={`h-5 w-5 ${
+                      facility.available ? 'text-indigo-600' : 'text-gray-400'
+                    }`}
+                  />
                   {facility.available ? (
                     <Check className="h-4 w-4 text-green-500" />
                   ) : (
                     <X className="h-4 w-4 text-red-500" />
                   )}
                 </div>
-                <div className={`text-sm font-medium ${
-                  facility.available ? 'text-indigo-900' : 'text-gray-500'
-                }`}>
+                <div
+                  className={`text-sm font-medium ${
+                    facility.available ? 'text-indigo-900' : 'text-gray-500'
+                  }`}
+                >
                   {facility.name}
                 </div>
               </div>
@@ -92,6 +136,72 @@ export function FacilitiesOverview({ school }: FacilitiesOverviewProps) {
               </span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Additional Infrastructure Details */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold mb-6">Infrastructure Status</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-medium text-gray-700 mb-4">Basic Amenities</h4>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-gray-600">Separate Room for HM</span>
+                {school.separateRoomForHM ? (
+                  <Check className="h-5 w-5 text-green-500" />
+                ) : (
+                  <X className="h-5 w-5 text-red-500" />
+                )}
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-gray-600">Boys Washrooms</span>
+                {school.boysWashrooms ? (
+                  <Check className="h-5 w-5 text-green-500" />
+                ) : (
+                  <X className="h-5 w-5 text-red-500" />
+                )}
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-gray-600">Girls Washrooms</span>
+                {school.girlsWashrooms ? (
+                  <Check className="h-5 w-5 text-green-500" />
+                ) : (
+                  <X className="h-5 w-5 text-red-500" />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-medium text-gray-700 mb-4">Safety & Security</h4>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-gray-600">Boundary Wall</span>
+                {school.boundaryWall ? (
+                  <Check className="h-5 w-5 text-green-500" />
+                ) : (
+                  <X className="h-5 w-5 text-red-500" />
+                )}
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-gray-600">Safety Standards</span>
+                {school.safetyStandards ? (
+                  <Check className="h-5 w-5 text-green-500" />
+                ) : (
+                  <X className="h-5 w-5 text-red-500" />
+                )}
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-gray-600">Universal Access</span>
+                {school.universalAccess ? (
+                  <Check className="h-5 w-5 text-green-500" />
+                ) : (
+                  <X className="h-5 w-5 text-red-500" />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

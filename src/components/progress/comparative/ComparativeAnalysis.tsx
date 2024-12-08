@@ -1,139 +1,92 @@
-import React, { useState } from 'react';
-import { RegionalComparison } from './RegionalComparison';
-import { ArrowUpRight, ArrowDownRight, Medal } from 'lucide-react';
-
-const mockData = {
-  stateComparison: [
-    { name: 'Kerala', standardized: 85, inProgress: 10, pending: 5 },
-    { name: 'West Bengal', standardized: 70, inProgress: 20, pending: 10 },
-    { name: 'Mizoram', standardized: 60, inProgress: 25, pending: 15 },
-    { name: 'Goa', standardized: 75, inProgress: 15, pending: 10 }
-  ],
-  metrics: [
-    {
-      label: 'Standardization Rate',
-      value: 78,
-      previousValue: 72,
-      unit: '%'
-    },
-    {
-      label: 'Schools Transitioned',
-      value: 450,
-      previousValue: 380,
-      unit: ''
-    },
-    {
-      label: 'Resource Utilization',
-      value: 92,
-      previousValue: 88,
-      unit: '%'
-    },
-    {
-      label: 'Completion Time',
-      value: 4.5,
-      previousValue: 5.2,
-      unit: ' months'
-    }
-  ],
-  topPerformers: [
-    { name: 'Government High School, Kerala', score: 98, trend: 5 },
-    { name: 'St. Mary\'s School, West Bengal', score: 95, trend: 3 },
-    { name: 'Central School, Mizoram', score: 92, trend: -2 }
-  ]
-};
+import React, { useState, useEffect } from 'react';
+import { StateSelector } from './StateSelector';
+import { EntitySelector } from './EntitySelector';
+import { MetricsOverview } from './MetricsOverview';
+import { ProgressDistribution } from './ProgressDistribution';
+import { TopPerformers } from './TopPerformers';
+import { AIInsights } from './AIInsights';
+import { useComparativeAnalysis } from '../../../hooks/useComparativeAnalysis';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 export function ComparativeAnalysis() {
-  const [selectedRegion, setSelectedRegion] = useState('Kerala');
-  const [comparisonType, setComparisonType] = useState<'state' | 'district' | 'school'>('state');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedType, setSelectedType] = useState<'district' | 'school'>('district');
+  const [selectedEntities, setSelectedEntities] = useState<string[]>([]);
+
+  const {
+    data,
+    loading,
+    error,
+    fetchAnalysis
+  } = useComparativeAnalysis();
+
+  useEffect(() => {
+    if (selectedState && selectedEntities.length > 0) {
+      fetchAnalysis(selectedState, selectedType, selectedEntities);
+    }
+  }, [selectedState, selectedType, selectedEntities]);
+
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+        {error}
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Comparative Analysis</h2>
-          <p className="text-gray-600">Compare progress across different regions and schools</p>
-        </div>
-        <div className="flex gap-4">
-          <select
-            value={comparisonType}
-            onChange={(e) => setComparisonType(e.target.value as typeof comparisonType)}
-            className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-          >
-            <option value="state">State Level</option>
-            <option value="district">District Level</option>
-            <option value="school">School Level</option>
-          </select>
-          <select
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
-            className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-          >
-            <option value="Kerala">Kerala</option>
-            <option value="West Bengal">West Bengal</option>
-            <option value="Mizoram">Mizoram</option>
-            <option value="Goa">Goa</option>
-          </select>
-        </div>
-      </div>
-
-      <RegionalComparison
-        region={selectedRegion}
-        comparisonData={mockData.stateComparison}
-        metrics={mockData.metrics}
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg p-6 shadow-md">
-          <h3 className="text-lg font-semibold mb-4">Top Performers</h3>
-          <div className="space-y-4">
-            {mockData.topPerformers.map((performer, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-full ${
-                    index === 0 ? 'bg-yellow-100 text-yellow-600' :
-                    index === 1 ? 'bg-gray-100 text-gray-600' :
-                    'bg-orange-100 text-orange-600'
-                  }`}>
-                    <Medal className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">{performer.name}</h4>
-                    <p className="text-sm text-gray-600">Score: {performer.score}%</p>
-                  </div>
-                </div>
-                <div className={`flex items-center gap-1 ${
-                  performer.trend > 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {performer.trend > 0 ? (
-                    <ArrowUpRight className="h-4 w-4" />
-                  ) : (
-                    <ArrowDownRight className="h-4 w-4" />
-                  )}
-                  <span>{Math.abs(performer.trend)}%</span>
-                </div>
-              </div>
-            ))}
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <StateSelector
+            value={selectedState}
+            onChange={setSelectedState}
+          />
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={selectedType === 'district'}
+                onChange={() => setSelectedType('district')}
+                className="text-indigo-600 focus:ring-indigo-500"
+              />
+              <span>District-wise</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={selectedType === 'school'}
+                onChange={() => setSelectedType('school')}
+                className="text-indigo-600 focus:ring-indigo-500"
+              />
+              <span>School-wise</span>
+            </label>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-md">
-          <h3 className="text-lg font-semibold mb-4">Key Insights</h3>
-          <div className="space-y-4">
-            <div className="p-4 bg-green-50 text-green-800 rounded-lg">
-              <h4 className="font-medium mb-2">Strong Performance</h4>
-              <p className="text-sm">Kerala shows consistently high standardization rates across all metrics</p>
-            </div>
-            <div className="p-4 bg-yellow-50 text-yellow-800 rounded-lg">
-              <h4 className="font-medium mb-2">Areas for Improvement</h4>
-              <p className="text-sm">Mizoram requires additional support to accelerate standardization process</p>
-            </div>
-            <div className="p-4 bg-blue-50 text-blue-800 rounded-lg">
-              <h4 className="font-medium mb-2">Trending Upward</h4>
-              <p className="text-sm">West Bengal shows significant improvement in the last quarter</p>
-            </div>
-          </div>
-        </div>
+        <EntitySelector
+          state={selectedState}
+          type={selectedType}
+          selected={selectedEntities}
+          onChange={setSelectedEntities}
+        />
       </div>
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : data ? (
+        <>
+          <MetricsOverview metrics={data.metrics} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ProgressDistribution
+              data={data.progressDistribution}
+              type={selectedType}
+            />
+            <TopPerformers performers={data.topPerformers} type={selectedType} />
+          </div>
+          <AIInsights insights={data.insights} />
+        </>
+      ) : null}
     </div>
   );
 }

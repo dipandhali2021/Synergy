@@ -7,6 +7,8 @@ import {
   BarChart2,
   Calculator,
 } from 'lucide-react';
+import { TransitionPlanTemplate } from '../../transition/TransitionPlanTemplate';
+import { ComplianceChecklist } from '../../compliance/ComplianceChecklist';
 
 interface ToolsListProps {
   onBack: () => void;
@@ -30,6 +32,36 @@ export function ToolsList() {
       </div>
     );
   }
+  if (selectedTool === 'transition-template') {
+    return (
+      <div className="space-y-6">
+        <button
+          onClick={() => setSelectedTool(null)}
+          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Tools
+        </button>
+
+        <TransitionPlanTemplate />
+      </div>
+    );
+  }
+  if (selectedTool === 'compliance-checklist') {
+    return (
+      <div className="space-y-6">
+        <button
+          onClick={() => setSelectedTool(null)}
+          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Tools
+        </button>
+
+        <ComplianceChecklist />
+      </div>
+    );
+  }
 
   const implementationTools = [
     {
@@ -46,7 +78,6 @@ export function ToolsList() {
       description:
         'Customizable template for planning and tracking your standardization journey',
       icon: FileSpreadsheet,
-      link: 'https://docs.google.com/spreadsheets/create',
       category: 'planning',
     },
     {
@@ -55,7 +86,6 @@ export function ToolsList() {
       description:
         'Comprehensive checklist to ensure alignment with standardization requirements',
       icon: FileText,
-      link: 'https://docs.google.com/document/create',
       category: 'compliance',
     },
     {

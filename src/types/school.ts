@@ -12,6 +12,21 @@ export interface School {
   teacherCount: number;
   facilities: string[];
   type: string;
+  qualityScore: number;
+  history:[
+    {
+      currentStructure: string;
+      recommendedStructure: string;
+      transitionStatus: string;
+      lastUpdated: string;
+      performanceBand: string;
+      studentCount: number;
+      teacherCount: number;
+      facilities: string[];
+      type: string;
+      qualityScore: number;
+    }
+  ]
   coordinates: {
     lat: number;
     lng: number;

@@ -2,16 +2,19 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { School, LogOut, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { LanguageSelector } from './common/LanguageSelector';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const isActive = (path: string) => {
     return location.pathname === path
       ? 'text-white'
-      : 'text-indigo-200 hover:text-white';
+      : 'text-indigo-200 hover:text-gray-700 hover:bg-indigo-50 px-3 py-1 rounded-lg';
   };
 
   const handleLogout = () => {
@@ -22,77 +25,76 @@ export function Header() {
   return (
     <header className="bg-indigo-600 text-white p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
+        {/* Logo and Title */}
         <Link to="/" className="flex items-center gap-2">
           <School className="h-8 w-8" />
-          <h1 className="text-2xl font-bold">School Structure Analysis</h1>
+          <h1 className="text-2xl font-bold">{t('app.title')}</h1>
         </Link>
 
-        <div className="flex items-center gap-6">
-          <nav className="flex gap-6">
+        {/* Navigation Links */}
+        <div className="flex items-center">
+          <nav className="flex gap-4">
             <Link to="/schools" className={isActive('/schools')}>
-              Schools
+              {t('nav.schools')}
             </Link>
             <Link to="/analysis" className={isActive('/analysis')}>
-              Analysis
+              {t('nav.analysis')}
             </Link>
             <Link
               to="/standardization"
               className={isActive('/standardization')}
             >
-              Standardization
-            </Link>
-            <Link to="/resources" className={isActive('/resources')}>
-              Resources
+              {t('nav.standardization')}
             </Link>
             <Link to="/progress" className={isActive('/progress')}>
-              Progress
+              {t('nav.progress')}
             </Link>
             <Link
               to="/resources/allocation"
-              // className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+              className={isActive('/resources/allocation')}
             >
-              {/* <Package className="h-5 w-5" /> */}
-              Resource Allocation
+              {t('nav.resourceAllocation')}
             </Link>
-
             <Link to="/engagement" className={isActive('/engagement')}>
-              Engagement
+              {t('nav.engagement')}
             </Link>
           </nav>
 
+          {/* User Info and Language Selector */}
           <div className="border-l border-indigo-500 pl-6 flex items-center gap-4">
+            {/* Language Selector */}
+            <LanguageSelector />
+
             {user ? (
               <>
-              <Link to="/profile" className="text-indigo-200 hover:text-white">
-                <div className="flex items-center gap-2" >
+                <div className="flex items-center gap-2">
                   <UserIcon className="h-5 w-5" />
                   <span className="text-sm">{user.name}</span>
                   <span className="text-xs bg-indigo-700 px-2 py-1 rounded">
                     {user.role.replace('_', ' ')}
                   </span>
                 </div>
-              </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 text-indigo-200 hover:text-white"
+                  className="flex items-center gap-1 text-indigo-200 hover:text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-lg"
                 >
                   <LogOut className="h-5 w-5" />
-                  <span className="text-sm">Logout</span>
+                  <span className="text-sm">{t('auth.logout')}</span>
                 </button>
               </>
             ) : (
               <div className="flex items-center gap-4">
                 <Link
                   to="/login"
-                  className="text-indigo-200 hover:text-white text-sm"
+                  className="text-indigo-200 hover:text-gray-700 hover:bg-indigo-50 text-sm px-3 py-2 rounded-lg"
                 >
-                  Login
+                  {t('auth.login')}
                 </Link>
                 <Link
                   to="/register"
                   className="bg-white text-indigo-600 px-4 py-2 rounded-md text-sm hover:bg-indigo-50"
                 >
-                  Register
+                  {t('auth.register')}
                 </Link>
               </div>
             )}

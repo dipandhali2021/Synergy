@@ -32,6 +32,10 @@ export function ResourceVisualization({ results }: ResourceVisualizationProps) {
       cost: results.costBreakdown.infrastructure,
     },
     {
+      category: 'Teaching',
+      cost: results.costBreakdown.teaching,
+    },
+    {
       category: 'Equipment',
       cost: results.costBreakdown.equipment,
     },

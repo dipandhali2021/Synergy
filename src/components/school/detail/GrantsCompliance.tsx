@@ -11,47 +11,26 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { DollarSign, ClipboardCheck, AlertTriangle } from 'lucide-react';
+import { SchoolDetail } from '../../../types/schoolDetail';
 
 interface GrantsComplianceProps {
-  school: School;
+  school: SchoolDetail;
 }
 
 export function GrantsCompliance({ school }: GrantsComplianceProps) {
-  const grantData = [
-    { month: 'Apr', received: 50000, utilized: 45000 },
-    { month: 'May', received: 75000, utilized: 70000 },
-    { month: 'Jun', received: 60000, utilized: 58000 },
-    { month: 'Jul', received: 80000, utilized: 75000 },
-    { month: 'Aug', received: 70000, utilized: 65000 },
-    { month: 'Sep', received: 90000, utilized: 85000 },
-  ];
+  // Replace hardcoded grantData with data from school
+  const grantData = school.grantUtilization.map((utilization) => ({
+    month: utilization.month,
+    received: utilization.grantsReceived,
+    utilized: utilization.grantsUtilized,
+  }));
 
-  const complianceVisits = [
-    {
-      type: 'Academic Inspection',
-      lastVisit: '2024-02-15',
-      status: 'completed',
-      findings: 'Satisfactory',
-    },
-    {
-      type: 'Safety Audit',
-      lastVisit: '2024-01-20',
-      status: 'pending',
-      findings: 'Minor improvements needed',
-    },
-    {
-      type: 'Infrastructure Review',
-      lastVisit: '2024-03-01',
-      status: 'completed',
-      findings: 'Meets standards',
-    },
-    {
-      type: 'Health & Sanitation',
-      lastVisit: '2024-02-28',
-      status: 'completed',
-      findings: 'Above average',
-    },
-  ];
+  // Replace hardcoded complianceVisits with data from school
+  const complianceVisits = school.complianceVisits.map((visit) => ({
+    type: visit.type,
+    lastVisit: visit.lastVisit,
+    status: visit.status,
+  }));
 
   return (
     <div className="space-y-6">
@@ -112,7 +91,6 @@ export function GrantsCompliance({ school }: GrantsComplianceProps) {
                 }`}>
                   {visit.status.charAt(0).toUpperCase() + visit.status.slice(1)}
                 </div>
-                <div className="text-sm text-gray-500">{visit.findings}</div>
               </div>
             </div>
           ))}
@@ -126,9 +104,11 @@ export function GrantsCompliance({ school }: GrantsComplianceProps) {
           <span className="font-medium">Upcoming Compliance Requirements</span>
         </div>
         <ul className="mt-2 space-y-1 text-sm text-yellow-700">
-          <li>Annual safety audit due in 30 days</li>
-          <li>Teacher qualification verification pending</li>
-          <li>Infrastructure assessment scheduled next month</li>
+          {school.upcomingComplianceRequirements.map((requirement) => (
+            <li key={requirement.type}>
+              {requirement.type} due on {requirement.deadline}
+            </li>
+          ))}
         </ul>
       </div>
     </div>

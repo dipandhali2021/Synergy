@@ -12,6 +12,7 @@
     "dev:server": "nodemon server/index.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^3.3.4",
     "@tensorflow/tfjs": "^4.17.0",
@@ -30,6 +31,8 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.344.0",
     "mongoose": "^8.2.1",
+    "node-cron": "^3.0.3",
+    "pdf-parse": "^1.1.1",
     "react": "^18.3.1",
     "react-countup": "^6.5.0",
     "react-dom": "^18.3.1",

@@ -1,12 +1,25 @@
 import React, { useState } from 'react';
-import { RegionalMetrics } from './RegionalMetrics';
-import { RegionalChallenges } from './RegionalChallenges';
-import { ResourceAllocation } from './ResourceAllocation';
-import { UpcomingGoals } from './UpcomingGoals';
 import { Map } from 'lucide-react';
+import { RegionalMetrics } from './metrics/RegionalMetrics';
+import { StateComparisonChart } from './comparison/StateComparisonChart';
+import { RegionalChallenges } from './challenges/RegionalChallenges';
+import { RegionalGoals } from './goals/RegionalGoals';
+import { useRegionalProgress } from '../../../hooks/useRegionalProgress';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
 
 export function RegionalProgress() {
   const [selectedState, setSelectedState] = useState('Kerala');
+  const {
+    metrics,
+    stateComparison,
+    challenges,
+    goals,
+    loading,
+    error,
+    fetchStateComparison,
+    addGoal,
+    updateGoal,
+  } = useRegionalProgress(selectedState);
 
   return (
     <div className="p-6 space-y-6">
@@ -20,7 +33,36 @@ export function RegionalProgress() {
           onChange={(e) => setSelectedState(e.target.value)}
           className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
         >
-          {['Kerala', 'West Bengal', 'Mizoram', 'Goa'].map((state) => (
+          {[
+            'Andhra Pradesh',
+            'Arunachal Pradesh',
+            'Assam',
+            'Bihar',
+            'Chhattisgarh',
+            'Goa',
+            'Gujarat',
+            'Haryana',
+            'Himachal Pradesh',
+            'Jharkhand',
+            'Karnataka',
+            'Kerala',
+            'Madhya Pradesh',
+            'Maharashtra',
+            'Manipur',
+            'Meghalaya',
+            'Mizoram',
+            'Nagaland',
+            'Odisha',
+            'Punjab',
+            'Rajasthan',
+            'Sikkim',
+            'Tamil Nadu',
+            'Telangana',
+            'Tripura',
+            'Uttar Pradesh',
+            'Uttarakhand',
+            'West Bengal',
+          ].map((state) => (
             <option key={state} value={state}>
               {state}
             </option>
@@ -28,14 +70,22 @@ export function RegionalProgress() {
         </select>
       </div>
 
-      <RegionalMetrics state={selectedState} />
+      <RegionalMetrics metrics={metrics} />
+
+      <StateComparisonChart
+          data={stateComparison}
+          onStateSelect={fetchStateComparison}
+        />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RegionalChallenges state={selectedState} />
-        <ResourceAllocation state={selectedState} />
+        <RegionalChallenges challenges={challenges} />
+        <RegionalGoals
+          goals={goals}
+          onAddGoal={addGoal}
+          onUpdateGoal={updateGoal}
+        />
       </div>
-
-      <UpcomingGoals state={selectedState} />
     </div>
   );
 }
+

@@ -1,86 +1,73 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Building2, Users, BookOpen } from 'lucide-react';
-import { FormField } from '../FormField';
+import { Building2, BookOpen } from 'lucide-react';
 
-export function InfrastructureSection() {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+interface InfrastructureSectionProps {
+  formData: any;
+  onChange: (field: string, value: any) => void;
+  errors: Record<string, string>;
+}
 
+export function InfrastructureSection({
+  formData,
+  onChange,
+  errors,
+}: InfrastructureSectionProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <FormField
-          label="Total Teachers"
-          icon={Users}
-          error={errors?.totalTeachers?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-gray-500" />
+              Total Classrooms
+            </div>
+          </label>
           <input
             type="number"
-            {...register('totalTeachers', { valueAsNumber: true })}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.totalClassrooms}
+            onChange={(e) => onChange('totalClassrooms', parseInt(e.target.value))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           />
-        </FormField>
+        </div>
 
-        <FormField
-          label="Total Classrooms"
-          icon={Building2}
-          error={errors?.totalClassrooms?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-gray-500" />
+              Lowest Class
+            </div>
+          </label>
           <input
             type="number"
-            {...register('totalClassrooms', { valueAsNumber: true })}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.lowestClass}
+            onChange={(e) => onChange('lowestClass', parseInt(e.target.value))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           />
-        </FormField>
+        </div>
 
-        <FormField
-          label="Total Students"
-          icon={Users}
-          error={errors?.totalStudents?.message as string}
-        >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-gray-500" />
+              Highest Class
+            </div>
+          </label>
           <input
             type="number"
-            {...register('totalStudents', { valueAsNumber: true })}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+            value={formData.highestClass}
+            onChange={(e) => onChange('highestClass', parseInt(e.target.value))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           />
-        </FormField>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          label="Lowest Class"
-          icon={BookOpen}
-          error={errors?.lowestClass?.message as string}
-        >
-          <input
-            type="number"
-            {...register('lowestClass', { valueAsNumber: true })}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
-          />
-        </FormField>
-
-        <FormField
-          label="Highest Class"
-          icon={BookOpen}
-          error={errors?.highestClass?.message as string}
-        >
-          <input
-            type="number"
-            {...register('highestClass', { valueAsNumber: true })}
-            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
-          />
-        </FormField>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         <div className="space-y-4">
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('separateRoomForHM')}
+              checked={formData.separateRoomForHM}
+              onChange={(e) => onChange('separateRoomForHM', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Separate Room for HM</span>
@@ -89,7 +76,8 @@ export function InfrastructureSection() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('boysWashrooms')}
+              checked={formData.boysWashrooms}
+              onChange={(e) => onChange('boysWashrooms', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Boys Washrooms</span>
@@ -98,7 +86,8 @@ export function InfrastructureSection() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('girlsWashrooms')}
+              checked={formData.girlsWashrooms}
+              onChange={(e) => onChange('girlsWashrooms', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Girls Washrooms</span>
@@ -109,7 +98,8 @@ export function InfrastructureSection() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('boundaryWall')}
+              checked={formData.boundaryWall}
+              onChange={(e) => onChange('boundaryWall', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Boundary Wall</span>
@@ -118,29 +108,8 @@ export function InfrastructureSection() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('libraryAvailable')}
-              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            <span>Library Available</span>
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              {...register('drinkingWaterAvailable')}
-              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            <span>Drinking Water Available</span>
-          </label>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              {...register('playgroundAvailable')}
+              checked={formData.playgroundAvailable}
+              onChange={(e) => onChange('playgroundAvailable', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <span>Playground Available</span>
@@ -149,10 +118,11 @@ export function InfrastructureSection() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('electricityAvailability')}
+              checked={formData.libraryAvailable}
+              onChange={(e) => onChange('libraryAvailable', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
-            <span>Electricity Availability</span>
+            <span>Library Available</span>
           </label>
         </div>
 
@@ -160,10 +130,31 @@ export function InfrastructureSection() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              {...register('kitchensForMidDayMeal')}
+              checked={formData.computerLabAvailable}
+              onChange={(e) => onChange('computerLabAvailable', e.target.checked)}
               className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
-            <span>Kitchens for Mid-Day Meal</span>
+            <span>Computer Lab Available</span>
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={formData.drinkingWaterAvailable}
+              onChange={(e) => onChange('drinkingWaterAvailable', e.target.checked)}
+              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <span>Drinking Water Available</span>
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={formData.electricityAvailability}
+              onChange={(e) => onChange('electricityAvailability', e.target.checked)}
+              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <span>Electricity Available</span>
           </label>
         </div>
       </div>
