@@ -1,6 +1,7 @@
 export interface ResourcePlan {
   id: string;
   schoolId: string;
+  number: number;
   status: 'pending' | 'approved' | 'rejected' | 'modified';
   createdAt: string;
   updatedAt: string;

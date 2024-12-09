@@ -1,36 +1,38 @@
 import { ResourcePlan, ResourceRequest, ResourceFeedback } from '../types/resourceAllocation';
+import axios from 'axios';
 
 export const resourceAllocationService = {
   getResourcePlans: async (schoolId: string): Promise<ResourcePlan[]> => {
-    // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          {
-            id: '1',
-            schoolId,
-            status: 'pending',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            resources: [
-              {
-                id: '1',
-                type: 'classroom',
-                category: 'infrastructure',
-                quantity: 2,
-                estimatedCost: 200000,
-                justification: 'Additional classrooms needed for increasing enrollment',
-                priority: 'high',
-                status: 'pending',
-                dispatchStatus: 'pending'
-              }
-            ],
-            totalEstimatedCost: 200000,
-            priority: 'high'
-          }
-        ]);
-      }, 1000);
-    });
+    const ans = await axios.get("http://localhost:5000/api/resource-plans/getallresourcerequests/")
+    return ans.data;
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve([
+    //       {
+    //         id: '1',
+    //         schoolId,
+    //         status: 'pending',
+    //         createdAt: new Date().toISOString(),
+    //         updatedAt: new Date().toISOString(),
+    //         resources: [
+    //           {
+    //             id: '1',
+    //             type: 'classroom',
+    //             category: 'infrastructure',
+    //             quantity: 2,
+    //             estimatedCost: 200000,
+    //             justification: 'Additional classrooms needed for increasing enrollment',
+    //             priority: 'high',
+    //             status: 'pending',
+    //             dispatchStatus: 'pending'
+    //           }
+    //         ],
+    //         totalEstimatedCost: 200000,
+    //         priority: 'high'
+    //       }
+    //     ]);
+    //   }, 1000);
+    // });
   },
 
   submitResourceRequest: async (request: Omit<ResourceRequest, 'id' | 'status' | 'submittedAt'>): Promise<ResourceRequest> => {

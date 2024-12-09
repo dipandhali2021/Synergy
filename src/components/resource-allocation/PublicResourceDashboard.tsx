@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -11,53 +11,131 @@ import {
   PieChart,
   Pie,
   Cell,
-} from 'recharts';
-import { Globe, Users, MessageSquare, AlertTriangle } from 'lucide-react';
+} from "recharts";
+import { Globe, MessageSquare } from "lucide-react";
+import axios from "axios";
+import { FeedbackForm } from "./FeedbackForm";
+import { FeedbackFormData } from "../../types/feedback";
 
-const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'];
-
-const allocationData = [
-  { category: 'Infrastructure', allocated: 4500000, utilized: 3800000 },
-  { category: 'Technology', allocated: 2800000, utilized: 2200000 },
-  { category: 'Teaching Staff', allocated: 3200000, utilized: 3000000 },
-  { category: 'Learning Materials', allocated: 1500000, utilized: 1200000 },
-];
-
-const distributionData = [
-  { name: 'Urban Schools', value: 45 },
-  { name: 'Rural Schools', value: 35 },
-  { name: 'Remote Areas', value: 20 },
-];
+const COLORS = ["#4f46e5", "#10b981", "#f59e0b", "#ef4444"];
 
 interface CommunityFeedback {
   id: string;
   schoolName: string;
-  type: 'improvement' | 'concern';
+  type: "improvement" | "concern";
   message: string;
   date: string;
-  status: 'pending' | 'addressed' | 'investigating';
+  status: "pending" | "addressed" | "investigating";
 }
 
-const mockFeedback: CommunityFeedback[] = [
-  {
-    id: '1',
-    schoolName: 'City Public School',
-    type: 'improvement',
-    message: 'New computer lab has significantly improved digital literacy',
-    date: '2024-03-15',
-    status: 'addressed',
-  },
-  {
-    id: '2',
-    schoolName: 'Rural High School',
-    type: 'concern',
-    message: 'Delay in receiving promised sports equipment',
-    date: '2024-03-14',
-    status: 'investigating',
-  },
-];
-
 export function PublicResourceDashboard() {
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [distributionData, setDistributionData] = useState([
+    { name: "Urban Schools", value: 0 },
+    { name: "Rural Schools", value: 0 },
+    { name: "Remote Areas", value: 0 },
+  ]);
+  const [allocationData, setAllocationData] = useState<any[]>([]);
+  const [error, setError] = useState("");
+  const [feedbackData, setFeedbackData] = useState<CommunityFeedback[]>([]);
+
+  // Handle feedback form submission
+  const handleSubmitFeedback = async (data: FeedbackFormData) => {
+    setLoading(true);
+    try {
+      console.log("Feedback Submitted:", data);
+      const response = await axios.post(
+        "http://localhost:5000/api/resource-plans/feedback/",
+        data
+      );
+      console.log("Backend Response:", response.data);
+      alert("Feedback successfully submitted!");
+      setShowForm(false);
+
+      // Re-fetch feedback after submission
+      fetchFeedback();
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      alert("Failed to submit feedback.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle form cancellation
+  const handleCancel = () => {
+    setShowForm(false);
+  };
+
+  const toggleForm = () => {
+    setShowForm((prev) => !prev);
+  };
+
+  // Fetch feedback data
+  const fetchFeedback = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/resource-plans/feedback/"
+      );
+      const mappedFeedback: CommunityFeedback[] = response.data.map(
+        (item: any) => ({
+          id: item._id,
+          schoolName: item.schoolName,
+          type: item.type,
+          message: item.message,
+          date: new Date(item.date).toISOString().split("T")[0],
+          status: item.status,
+        })
+      );
+      setFeedbackData(mappedFeedback);
+    } catch (err) {
+      console.error("Error fetching feedback data:", err);
+      setError("An error occurred while fetching feedback data.");
+    }
+  };
+
+  // Fetch allocation data
+  useEffect(() => {
+    const fetchAllocationData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/resource-plans/allocation-utilization/"
+        );
+        setAllocationData(response.data);
+      } catch (err) {
+        console.error("Error fetching allocation data:", err);
+        setError("An error occurred while fetching allocation data.");
+      }
+    };
+    fetchAllocationData();
+  }, []);
+
+  // Fetch distribution data
+  useEffect(() => {
+    const fetchDistributionData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/school/school-distribution/"
+        );
+        if (response.data.success) {
+          setDistributionData(response.data.distributionData);
+        } else {
+          setError("Failed to fetch distribution data.");
+        }
+      } catch (err) {
+        console.error("Error fetching distribution data:", err);
+        setError("An error occurred while fetching distribution data.");
+      }
+    };
+    fetchDistributionData();
+  }, []);
+
+  // Fetch feedback data on initial load
+  useEffect(() => {
+    fetchFeedback();
+  }, []);
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-6">
@@ -130,14 +208,26 @@ export function PublicResourceDashboard() {
       <div className="border-t pt-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium">Community Feedback</h3>
-          <button className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800">
+          <button
+            className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"
+            onClick={toggleForm}
+          >
             <MessageSquare className="h-5 w-5" />
             Submit Feedback
           </button>
         </div>
+        {showForm && (
+          <div className="p-4 border rounded-lg bg-gray-50">
+            <FeedbackForm
+              onSubmit={handleSubmitFeedback}
+              onCancel={handleCancel}
+              loading={loading}
+            />
+          </div>
+        )}
 
         <div className="space-y-4">
-          {mockFeedback.map((feedback) => (
+          {feedbackData.map((feedback) => (
             <div key={feedback.id} className="border rounded-lg p-4">
               <div className="flex items-start justify-between">
                 <div>
@@ -145,9 +235,9 @@ export function PublicResourceDashboard() {
                     <h4 className="font-medium">{feedback.schoolName}</h4>
                     <span
                       className={`px-3 py-1 rounded-full text-sm ${
-                        feedback.type === 'improvement'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                        feedback.type === "improvement"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
                       {feedback.type}
@@ -160,11 +250,11 @@ export function PublicResourceDashboard() {
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
-                    feedback.status === 'addressed'
-                      ? 'bg-green-100 text-green-800'
-                      : feedback.status === 'investigating'
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-gray-100 text-gray-800'
+                    feedback.status === "addressed"
+                      ? "bg-green-100 text-green-800"
+                      : feedback.status === "investigating"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-gray-100 text-gray-800"
                   }`}
                 >
                   {feedback.status}

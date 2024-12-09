@@ -1,4 +1,7 @@
+// src/components/resource-allocation/ResourceMatchingSystem.tsx
+
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   ArrowRight,
   School,
@@ -6,75 +9,81 @@ import {
   Share2,
   CheckCircle,
   MapPin,
+  Search,
+  Loader2,
 } from 'lucide-react';
 
-interface ResourceMatch {
-  id: string;
+interface SchoolMatch {
+  schoolId: string;
   schoolName: string;
-  location: string;
-  resourceType: string;
-  quantity: number;
   matchScore: number;
-  distance: number;
-  status: 'pending' | 'matched' | 'transferred';
+  potentialResources: string[];
+  reasonForMatch: string;
+  location: {
+    state: string;
+    district: string;
+  };
 }
 
-interface SharedResource {
-  id: string;
+interface School {
+  schoolID: string;
   schoolName: string;
-  resourceType: string;
-  quantity: number;
-  availableFrom: string;
-  availableTo: string;
-  distance: number;
 }
-
-const mockMatches: ResourceMatch[] = [
-  {
-    id: '1',
-    schoolName: 'Delhi Public School',
-    location: 'New Delhi',
-    resourceType: 'Laboratory Equipment',
-    quantity: 5,
-    matchScore: 95,
-    distance: 3.2,
-    status: 'pending',
-  },
-  {
-    id: '2',
-    schoolName: "St. Mary's School",
-    location: 'Mumbai',
-    resourceType: 'Sports Equipment',
-    quantity: 10,
-    matchScore: 88,
-    distance: 2.5,
-    status: 'matched',
-  },
-];
-
-const mockSharedResources: SharedResource[] = [
-  {
-    id: '1',
-    schoolName: 'City International School',
-    resourceType: 'Computer Lab',
-    quantity: 1,
-    availableFrom: '2024-04-01',
-    availableTo: '2024-06-30',
-    distance: 4.5,
-  },
-  {
-    id: '2',
-    schoolName: 'Modern High School',
-    resourceType: 'Science Equipment',
-    quantity: 3,
-    availableFrom: '2024-03-20',
-    availableTo: '2024-05-31',
-    distance: 2.8,
-  },
-];
 
 export function ResourceMatchingSystem() {
-  const [activeTab, setActiveTab] = useState<'matches' | 'shared'>('matches');
+  const [schoolSearchTerm, setSchoolSearchTerm] = useState('');
+  const [selectedSchoolId, setSelectedSchoolId] = useState<string>('');
+  const [schools, setSchools] = useState<School[]>([]);
+  const [matches, setMatches] = useState<SchoolMatch[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
+
+  const searchSchools = async (schoolId: string) => {
+    if (!schoolId) return;
+    setSearching(true);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/school/details/search/${schoolId}`);
+      console.log(response.data);
+      setSchools(response.data);
+    } catch (error) {
+      console.error('Error searching schools:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const findMatches = async (schoolId: string) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/resource-plans/matches/${schoolId}`);
+      setMatches(response.data);
+      setSchools([]); // Clear school search results
+      setSchoolSearchTerm(''); // Clear search term
+    } catch (error) {
+      console.error('Error finding matches:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSchoolSelect = (schoolId: string) => {
+    setSelectedSchoolId(schoolId);
+    findMatches(schoolId);
+  };
+
+  const initiateResourceRequest = async (matchedSchoolId: string, matchScore: any ) => {
+    try {
+      await axios.post(' http://localhost:5000/api/resource-plans/matches', {
+        requestingSchoolId: selectedSchoolId,
+        matchedSchoolId,
+        status: 'pending',
+        matchScore: matchScore,
+      });
+      // You could add a success message or update the UI here
+    } catch (error) {
+      console.error('Error initiating resource request:', error);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -84,140 +93,140 @@ export function ResourceMatchingSystem() {
             Intelligent Resource Matching
           </h2>
           <p className="text-gray-600">
-            Optimize resource distribution through smart matching
+            Find the best resource sharing opportunities for your school
           </p>
         </div>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setActiveTab('matches')}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === 'matches'
-              ? 'bg-indigo-50 text-indigo-600'
-              : 'text-gray-600 hover:bg-gray-50'
-          }`}
-        >
-          Resource Matches
-        </button>
-        <button
-          onClick={() => setActiveTab('shared')}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === 'shared'
-              ? 'bg-indigo-50 text-indigo-600'
-              : 'text-gray-600 hover:bg-gray-50'
-          }`}
-        >
-          Shared Resources
-        </button>
-      </div>
+      {/* School Search */}
+      <div className="bg-white rounded-lg p-6 shadow-md">
+        <div className="max-w-xl mx-auto">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Your School
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              value={schoolSearchTerm}
+              onChange={(e) => {
+                setSchoolSearchTerm(e.target.value);
+                searchSchools(e.target.value);
+              }}
+              className="w-full px-4 py-3 border rounded-lg pr-10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter school name or ID..."
+            />
+            {searching ? (
+              <Loader2 className="absolute right-3 top-3.5 h-5 w-5 text-gray-400 animate-spin" />
+            ) : (
+              <Search className="absolute right-3 top-3.5 h-5 w-5 text-gray-400" />
+            )}
+          </div>
 
-      {activeTab === 'matches' ? (
-        <div className="space-y-4">
-          {mockMatches.map((match) => (
-            <div key={match.id} className="bg-white rounded-lg p-6 shadow-md">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <School className="h-5 w-5 text-indigo-600" />
-                    <h3 className="font-medium">{match.schoolName}</h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs ${
-                        match.status === 'matched'
-                          ? 'bg-green-100 text-green-800'
-                          : match.status === 'transferred'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                    >
-                      {match.status}
+          {schools.length > 0 && (
+            <div className="mt-2 border rounded-lg shadow-sm max-h-60 overflow-y-auto">
+              {schools.map((school) => (
+                <button
+                  key={school.schoolID}
+                  onClick={() => handleSchoolSelect(school.schoolID)}
+                  className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center justify-between"
+                >
+                  <div>
+                    <span className="font-medium">{school.schoolName}</span>
+                    <span className="text-sm text-gray-500 ml-2">
+                      ({school.schoolID})
                     </span>
                   </div>
+                  <ArrowRight className="h-4 w-4 text-gray-400" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Package className="h-4 w-4" />
-                      <span>
-                        {match.resourceType} (Qty: {match.quantity})
+      {/* Matches Display */}
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
+        </div>
+      ) : (
+        matches.length > 0 && (
+          <div className="space-y-4">
+            {matches.map((match) => (
+              <div
+                key={match.schoolId}
+                className="bg-white rounded-lg p-6 shadow-md"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <School className="h-5 w-5 text-indigo-600" />
+                      <h3 className="font-medium">{match.schoolName}</h3>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          match.matchScore >= 70
+                            ? 'bg-green-100 text-green-800'
+                            : match.matchScore >= 40
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}
+                      >
+                        {match.matchScore}% Match
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>
-                        {match.location} ({match.distance} km)
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <div className="text-sm text-gray-600 mb-1">
-                        Match Score
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-indigo-600 h-2 rounded-full"
-                            style={{ width: `${match.matchScore}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium">
-                          {match.matchScore}%
+                    <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>
+                          {match.location.district}, {match.location.state}
                         </span>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
-                  Process Match
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {mockSharedResources.map((resource) => (
-            <div
-              key={resource.id}
-              className="bg-white rounded-lg p-6 shadow-md"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Share2 className="h-5 w-5 text-indigo-600" />
-                    <h3 className="font-medium">{resource.schoolName}</h3>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Package className="h-4 w-4" />
-                      <span>
-                        {resource.resourceType} (Qty: {resource.quantity})
-                      </span>
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">
+                        Available Resources:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {match.potentialResources.map((resource) => (
+                          <span
+                            key={resource}
+                            className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-sm"
+                          >
+                            {resource}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{resource.distance} km away</span>
-                    </div>
+
+                    <p className="text-sm text-gray-600">{match.reasonForMatch}</p>
                   </div>
 
-                  <div className="text-sm text-gray-600">
-                    Available:{' '}
-                    {new Date(resource.availableFrom).toLocaleDateString()} to{' '}
-                    {new Date(resource.availableTo).toLocaleDateString()}
-                  </div>
+                  <button
+                    onClick={() => initiateResourceRequest(match.schoolId,match.matchScore)}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                  >
+                    Request Resources
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
                 </div>
-
-                <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
-                  Request Access
-                  <ArrowRight className="h-4 w-4" />
-                </button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )
+      )}
+
+      {matches.length === 0 && selectedSchoolId && !loading && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+          <Share2 className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
+          <h3 className="text-lg font-medium text-yellow-800 mb-1">
+            No Matches Found
+          </h3>
+          <p className="text-sm text-yellow-600">
+            We couldn't find any resource matching opportunities for your school at
+            this time.
+          </p>
         </div>
       )}
     </div>

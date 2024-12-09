@@ -20,6 +20,7 @@ interface InfrastructureOverviewProps {
 }
 
 export function InfrastructureOverview({ school }: InfrastructureOverviewProps) {
+  console.log(school);
   const classroomConditionTotals =
     school.classroomCondition.goodCondition +
     school.classroomCondition.minorRepair +

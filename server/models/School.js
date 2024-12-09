@@ -47,6 +47,12 @@ const historyEntrySchema = new mongoose.Schema({
 
 const schoolSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'SchoolDetail',
+      required: true,
+      unique: true,
+    },
     name: {
       type: String,
       required: true,
@@ -67,7 +73,6 @@ const schoolSchema = new mongoose.Schema(
       enum: ['Odd Structure', 'Standard Structure'],
       default: 'Odd Structure',
     },
-
     recommendedStructure: {
       type: String,
       enum: ['Odd Structure', 'Standard Structure'],
@@ -83,14 +88,12 @@ const schoolSchema = new mongoose.Schema(
       enum: ['Excellent', 'Good', 'Average', 'Poor'],
       required: true,
     },
-
     qualityScore: {
       type: Number,
       required: true,
       min: 0,
       max: 100,
     },
-
     studentCount: {
       type: Number,
       required: true,

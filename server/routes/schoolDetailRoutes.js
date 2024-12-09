@@ -1,52 +1,25 @@
+
+
+
 import express from 'express';
 import { auth } from '../middleware/auth.js';
 import { body } from 'express-validator';
 import {
-  getBasicInfo,
-  getComplianceChecklist,
-  getFacilitiesOverview,
-  getGrantsCompliance,
-  getInfrastructureOverview,
-  getManagementInfo,
-  getPerformanceOverview,
-  getStudentTeacherData,
-  getSchoolDetails,
-  createSchoolDetail
+  createSchoolDetail,
+  getAllSchools,
+  getSchoolDetail,
+  searchSchoolBySchoolID
 } from '../controllers/schoolDetailController.js';
 
 const router = express.Router();
 
-// Get basic info
-router.get('/:id/basic-info', auth, getBasicInfo);
 
-// Get compliance checklist
-router.get('/:id/compliance-checklist', auth, getComplianceChecklist);
-
-// Get facilities overview
-router.get('/:id/facilities-overview', auth, getFacilitiesOverview);
-
-// Get grants compliance
-router.get('/:id/grants-compliance', auth, getGrantsCompliance);
-
-// Get infrastructure overview
-router.get('/:id/infrastructure-overview', auth, getInfrastructureOverview);
-
-// Get management info
-router.get('/:id/management-info', auth, getManagementInfo);
-
-// Get performance overview
-router.get('/:id/performance-overview', auth, getPerformanceOverview);
-
-// Get student teacher data
-router.get('/:id/student-teacher-data', auth, getStudentTeacherData);
-
-// Get complete school details
-router.get('/:id', auth, getSchoolDetails);
-
+router.get('/all', getAllSchools);
+router.get('/:id',getSchoolDetail)
+router.get('/search/:schoolID', searchSchoolBySchoolID);
 // Create school detail
 router.post(
-  '/create/:id',
-  auth,
+  '/insertschool',
   [
     // Basic Information
     body('schoolID').trim().notEmpty().withMessage('School ID is required'),
@@ -120,7 +93,8 @@ router.post(
     body('researchAndDevelopmentEngagement').isBoolean().withMessage('researchAndDevelopmentEngagement must be a boolean'),
     body('studentLearningOutcomes').isBoolean().withMessage('studentLearningOutcomes must be a boolean'),
     body('dataManagementAndReporting').isBoolean().withMessage('dataManagementAndReporting must be a boolean'),
-    
+    body('latitude').optional().isFloat().withMessage('Invalid latitude value'),
+    body('longitude').optional().isFloat().withMessage('Invalid longitude value'),  
     // Classroom Condition
     body('classroomCondition.goodCondition').isInt({ min: 0 }).withMessage('Invalid goodCondition value'),
     body('classroomCondition.minorRepair').isInt({ min: 0 }).withMessage('Invalid minorRepair value'),
@@ -198,3 +172,4 @@ router.post(
 );
 
 export default router;
+// Search school by school ID

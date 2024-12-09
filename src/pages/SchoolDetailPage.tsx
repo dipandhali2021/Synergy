@@ -37,7 +37,7 @@ export function SchoolDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { school, loading, error } = useSchoolDetail(id!);
   const [activeTab, setActiveTab] = useState<TabType>('overview');
-
+    console.log(school);
   if (loading) return <LoadingSpinner />;
   if (error) return <div className="text-red-600">{error}</div>;
   if (!school) return <div>School not found</div>;
@@ -70,7 +70,7 @@ export function SchoolDetailPage() {
               )}
             </div>
             <div>
-              <h1 className="text-3xl font-bold">{school.name}</h1>
+              <h1 className="text-3xl font-bold">{school.schoolName}</h1>
               <div className="flex items-center gap-2 mt-2 text-indigo-100">
                 <MapPin className="h-4 w-4" />
                 <span>
@@ -97,7 +97,7 @@ export function SchoolDetailPage() {
               <div className="text-sm text-indigo-100">Facilities</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">99</div>
+              <div className="text-2xl font-bold">{school.qualityScore.toFixed(2)}</div>
               <div className="text-sm text-indigo-100">Quality Score</div>
             </div>
           </div>

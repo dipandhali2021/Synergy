@@ -5,10 +5,7 @@ import { FormField } from '../FormField';
 import { states } from '../../../data/states';
 
 export function GeneralInfoFields() {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { register, formState: { errors } } = useFormContext();
 
   return (
     <div className="space-y-6">
@@ -32,7 +29,7 @@ export function GeneralInfoFields() {
           error={errors?.udiseCode?.message as string}
         >
           <input
-            {...register('udiseCode')}
+            {...register('schoolId')}
             type="text"
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
             placeholder="Enter UDISE code"
@@ -51,7 +48,7 @@ export function GeneralInfoFields() {
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select State</option>
-            {states.map((state) => (
+            {states.map(state => (
               <option key={state.code} value={state.code}>
                 {state.name}
               </option>
@@ -86,7 +83,7 @@ export function GeneralInfoFields() {
         </FormField>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      {/* <div className="grid grid-cols-1 gap-6">
         <FormField
           label="School Category"
           icon={School}
@@ -101,7 +98,7 @@ export function GeneralInfoFields() {
             <option value="standard">Standard Structure</option>
           </select>
         </FormField>
-      </div>
+      </div> */}
     </div>
   );
 }

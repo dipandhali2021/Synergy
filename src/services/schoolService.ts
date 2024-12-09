@@ -73,7 +73,8 @@ export const schoolService = {
           type: school.type,
           coordinates: school.coordinates,
           qualityScore: school.qualityScore,
-          history: school.history
+          history: school.history,
+          schoolId: school.schoolId,
         })),
         total: response.data.length
       };

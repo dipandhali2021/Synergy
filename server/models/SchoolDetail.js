@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const SchoolDetailSchema = new mongoose.Schema({
-  school_id: { type: mongoose.Schema.Types.ObjectId, ref: 'SchoolDetail', required: true },
   schoolID: { type: String, required: true, unique: true },
   schoolName: { type: String, required: true },
+  qualityScore: { type: Number },
   state: { type: String, required: true },
   district: { type: String, required: true },
   block: { type: String, required: true },
@@ -71,6 +71,9 @@ const SchoolDetailSchema = new mongoose.Schema({
   researchAndDevelopmentEngagement: { type: Boolean },
   studentLearningOutcomes: { type: Boolean },
   dataManagementAndReporting: { type: Boolean },
+  grant: {type: Boolean},
+  latitude: { type: Number },
+  longitude: { type: Number },
   classroomCondition: {
     goodCondition: { type: Number },
     minorRepair: { type: Number },
@@ -141,4 +144,4 @@ const SchoolDetailSchema = new mongoose.Schema({
   timestamps: true
 });
 
-export default mongoose.model('SchoolDetail', SchoolDetailSchema);
+export default mongoose.model("SchoolDetail", SchoolDetailSchema);

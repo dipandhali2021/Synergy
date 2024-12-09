@@ -22,6 +22,7 @@ import comparativeProgressRoutes from './routes/comparativeProgressRoutes.js';
 import challengesRoutes from './routes/challengesRoutes.js';
 import reportRoutes from './routes/reportsRoutes.js';
 import chatBotRoutes from './routes/chatBotRoutes.js';
+import resourcePlanRoutes from './routes/resourcePlanRoutes.js';
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use('/api/policies', policyRoutes);
 app.use('/api/schools', schoolRoutes);
 app.use('/api/school/details', schooldetailRoutes);
 app.use('/api/chatbot', chatBotRoutes);
+app.use('/api/resource-plans', resourcePlanRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

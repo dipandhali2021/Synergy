@@ -34,7 +34,6 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
     }
   };
 
-  console.log(school);
  
 
   return (
@@ -54,9 +53,9 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
           </div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-indigo-600">
-            {school.qualityScore}
-          </div>
+            <div className="text-2xl font-bold text-indigo-600">
+            {school.qualityScore.toFixed(2)}
+            </div>
           <div className="text-xs text-gray-500">Quality Score</div>
         </div>
       </div>
@@ -110,11 +109,10 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
 
         <div className="flex gap-2">
           <button
-            onClick={onViewDetails}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
           >
             <Link
-              to={`/school/detail/${school.id}`}
+              to={`/school/detail/${school.schoolId}`}
               className="flex items-center gap-2"
             >
               <Eye className="h-4 w-4" />

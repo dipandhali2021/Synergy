@@ -13,16 +13,21 @@ export function GrantsComplianceSection({
   errors,
 }: GrantsComplianceSectionProps) {
   const addComplianceVisit = () => {
-    const newVisits = [...(formData.complianceVisits || []), {
-      type: '',
-      lastVisit: '',
-      status: '',
-    }];
+    const newVisits = [
+      ...(formData.complianceVisits || []),
+      {
+        type: '',
+        lastVisit: '',
+        status: '',
+      },
+    ];
     onChange('complianceVisits', newVisits);
   };
 
   const removeComplianceVisit = (index: number) => {
-    const newVisits = formData.complianceVisits.filter((_: any, i: number) => i !== index);
+    const newVisits = formData.complianceVisits.filter(
+      (_: any, i: number) => i !== index
+    );
     onChange('complianceVisits', newVisits);
   };
 
@@ -33,16 +38,31 @@ export function GrantsComplianceSection({
         Please provide the grant utilization details.
       </p>
 
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={formData.grant}
+          onChange={(e) => onChange('grant', e.target.checked)}
+          className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+        />
+        <span>Have you been granted money</span>
+      </label>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Month</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Month
+          </label>
           <input
             type="text"
             value={formData.grantUtilization?.[0]?.month || ''}
-            onChange={(e) => onChange('grantUtilization', [{
-              ...formData.grantUtilization?.[0],
-              month: e.target.value
-            }])}
+            onChange={(e) =>
+              onChange('grantUtilization', [
+                {
+                  ...formData.grantUtilization?.[0],
+                  month: e.target.value,
+                },
+              ])
+            }
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -54,10 +74,14 @@ export function GrantsComplianceSection({
           <input
             type="number"
             value={formData.grantUtilization?.[0]?.grantsReceived || ''}
-            onChange={(e) => onChange('grantUtilization', [{
-              ...formData.grantUtilization?.[0],
-              grantsReceived: parseFloat(e.target.value)
-            }])}
+            onChange={(e) =>
+              onChange('grantUtilization', [
+                {
+                  ...formData.grantUtilization?.[0],
+                  grantsReceived: parseFloat(e.target.value),
+                },
+              ])
+            }
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -69,10 +93,14 @@ export function GrantsComplianceSection({
           <input
             type="number"
             value={formData.grantUtilization?.[0]?.grantsUtilized || ''}
-            onChange={(e) => onChange('grantUtilization', [{
-              ...formData.grantUtilization?.[0],
-              grantsUtilized: parseFloat(e.target.value)
-            }])}
+            onChange={(e) =>
+              onChange('grantUtilization', [
+                {
+                  ...formData.grantUtilization?.[0],
+                  grantsUtilized: parseFloat(e.target.value),
+                },
+              ])
+            }
             className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -107,7 +135,9 @@ export function GrantsComplianceSection({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Type
+                </label>
                 <input
                   type="text"
                   value={visit.type}
@@ -121,7 +151,9 @@ export function GrantsComplianceSection({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Last Visit</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Visit
+                </label>
                 <input
                   type="date"
                   value={visit.lastVisit}
@@ -135,7 +167,9 @@ export function GrantsComplianceSection({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
                 <input
                   type="text"
                   value={visit.status}

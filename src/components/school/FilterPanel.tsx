@@ -1,27 +1,60 @@
 import React from 'react';
-import { SchoolFilters } from '../../types/school';
-import {
-  Building2,
-  GraduationCap,
-  MapPin,
-  Users,
-  BarChart3,
-  BookOpen,
-  CheckCircle2,
-} from 'lucide-react';
+import { Building2, MapPin, Users, BookOpen } from 'lucide-react';
+import { School } from '../../types/school';
 
 interface FilterPanelProps {
-  filters: SchoolFilters;
-  onFilterChange: (filters: SchoolFilters) => void;
+  filters: {
+    structure: string;
+    state: string;
+    type: string;
+    performanceBand: string;
+    facilities: string[];
+  };
+  onFilterChange: (filters: any) => void;
 }
 
 export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
-  const handleFilterChange = (
-    key: keyof SchoolFilters,
-    value: string | string[]
-  ) => {
+  const handleFilterChange = (key: string, value: string | string[]) => {
     onFilterChange({ ...filters, [key]: value });
   };
+
+  // Available states based on your data
+  const states = [
+    'Ladakh', 'Kerala', 'Tamil Nadu', 'Karnataka', 'Maharashtra',
+    'Gujarat', 'Rajasthan', 'Uttar Pradesh', 'Bihar', 'West Bengal'
+  ];
+
+  // School structures based on your data
+  const structures = [
+    { value: 'Odd Structure', label: 'Odd Structure' },
+    { value: 'Standard Structure', label: 'Standard Structure' }
+  ];
+
+  // School types based on your data
+  const schoolTypes = [
+    { value: 'government', label: 'Government' },
+    { value: 'private', label: 'Private' },
+    { value: 'aided', label: 'Aided' },
+    { value: 'unaided', label: 'Unaided' }
+  ];
+
+  // Performance bands based on your data
+  const performanceBands = [
+    { value: 'Excellent', label: 'Excellent' },
+    { value: 'Good', label: 'Good' },
+    { value: 'Average', label: 'Average' },
+    { value: 'Poor', label: 'Poor' }
+  ];
+
+  // Available facilities based on your data
+  const facilityOptions = [
+    'Library',
+    'Computer Lab',
+    'Science Lab',
+    'Playground',
+    'Electricity',
+    'Smart Classroom'
+  ];
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -31,22 +64,27 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
       </div>
 
       <div className="divide-y divide-gray-200">
+        {/* School Structure Filter */}
         <div className="p-6">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
             <Building2 className="h-4 w-4 text-indigo-500" />
-            Category
+            Structure
           </label>
           <select
-            value={filters.category}
-            onChange={(e) => handleFilterChange('category', e.target.value)}
+            value={filters.structure}
+            onChange={(e) => handleFilterChange('structure', e.target.value)}
             className="w-full rounded-lg border-gray-200 text-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
-            <option value="">All Categories</option>
-            <option value="odd">Odd Structure</option>
-            <option value="standard">Standard Structure</option>
+            <option value="">All Structures</option>
+            {structures.map((structure) => (
+              <option key={structure.value} value={structure.value}>
+                {structure.label}
+              </option>
+            ))}
           </select>
         </div>
 
+        {/* State Filter */}
         <div className="p-6">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
             <MapPin className="h-4 w-4 text-indigo-500" />
@@ -58,49 +96,15 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
             className="w-full rounded-lg border-gray-200 text-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
             <option value="">All States</option>
-            <option value="kerala">Kerala</option>
-            <option value="west-bengal">West Bengal</option>
-            <option value="mizoram">Mizoram</option>
-            <option value="goa">Goa</option>
+            {states.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
           </select>
         </div>
 
-        <div className="p-6">
-          <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
-            <GraduationCap className="h-4 w-4 text-indigo-500" />
-            Grade Levels
-          </label>
-          <div className="space-y-3">
-            {['Primary', 'Middle', 'Secondary', 'Senior Secondary'].map(
-              (level) => (
-                <label key={level} className="flex items-center gap-3">
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={filters.gradeLevels.includes(
-                        level.toLowerCase()
-                      )}
-                      onChange={(e) => {
-                        const newLevels = e.target.checked
-                          ? [...filters.gradeLevels, level.toLowerCase()]
-                          : filters.gradeLevels.filter(
-                              (l) => l !== level.toLowerCase()
-                            );
-                        handleFilterChange('gradeLevels', newLevels);
-                      }}
-                      className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    {filters.gradeLevels.includes(level.toLowerCase()) && (
-                      <CheckCircle2 className="absolute right-0 top-0 h-3 w-3 text-indigo-600" />
-                    )}
-                  </div>
-                  <span className="text-sm text-gray-700">{level}</span>
-                </label>
-              )
-            )}
-          </div>
-        </div>
-
+        {/* School Type Filter */}
         <div className="p-6">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
             <Users className="h-4 w-4 text-indigo-500" />
@@ -112,65 +116,57 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
             className="w-full rounded-lg border-gray-200 text-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
             <option value="">All Types</option>
-            <option value="government">Government</option>
-            <option value="private">Private</option>
-            <option value="aided">Aided</option>
-            <option value="unaided">Unaided</option>
+            {schoolTypes.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
+              </option>
+            ))}
           </select>
         </div>
 
+        {/* Performance Band Filter */}
         <div className="p-6">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
-            <BarChart3 className="h-4 w-4 text-indigo-500" />
+            <Users className="h-4 w-4 text-indigo-500" />
             Performance Band
           </label>
           <select
             value={filters.performanceBand}
-            onChange={(e) =>
-              handleFilterChange('performanceBand', e.target.value)
-            }
+            onChange={(e) => handleFilterChange('performanceBand', e.target.value)}
             className="w-full rounded-lg border-gray-200 text-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
             <option value="">All Performance Levels</option>
-            <option value="excellent">Excellent</option>
-            <option value="satisfactory">Satisfactory</option>
-            <option value="needs-improvement">Needs Improvement</option>
+            {performanceBands.map((band) => (
+              <option key={band.value} value={band.value}>
+                {band.label}
+              </option>
+            ))}
           </select>
         </div>
 
+        {/* Facilities Filter */}
         <div className="p-6">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-3">
             <BookOpen className="h-4 w-4 text-indigo-500" />
             Facilities
           </label>
           <div className="space-y-3">
-            {['Library', 'Sports', 'Computer Lab', 'Science Lab'].map(
-              (facility) => (
-                <label key={facility} className="flex items-center gap-3">
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={filters.facilities.includes(
-                        facility.toLowerCase()
-                      )}
-                      onChange={(e) => {
-                        const newFacilities = e.target.checked
-                          ? [...filters.facilities, facility.toLowerCase()]
-                          : filters.facilities.filter(
-                              (f) => f !== facility.toLowerCase()
-                            );
-                        handleFilterChange('facilities', newFacilities);
-                      }}
-                      className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    {filters.facilities.includes(facility.toLowerCase()) && (
-                      <CheckCircle2 className="absolute right-0 top-0 h-3 w-3 text-indigo-600" />
-                    )}
-                  </div>
-                  <span className="text-sm text-gray-700">{facility}</span>
-                </label>
-              )
-            )}
+            {facilityOptions.map((facility) => (
+              <label key={facility} className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={filters.facilities.includes(facility)}
+                  onChange={(e) => {
+                    const newFacilities = e.target.checked
+                      ? [...filters.facilities, facility]
+                      : filters.facilities.filter((f) => f !== facility);
+                    handleFilterChange('facilities', newFacilities);
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span className="text-sm text-gray-700">{facility}</span>
+              </label>
+            ))}
           </div>
         </div>
       </div>
@@ -179,9 +175,8 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
         <button
           onClick={() =>
             onFilterChange({
-              category: '',
+              structure: '',
               state: '',
-              gradeLevels: [],
               type: '',
               performanceBand: '',
               facilities: [],

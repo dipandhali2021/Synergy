@@ -1,88 +1,119 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ResourceFeedback } from '../../types/resourceAllocation';
-import { Star, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 interface FeedbackFormProps {
-  resourcePlanId: string;
-  onSubmit: (feedback: Omit<ResourceFeedback, 'id' | 'submittedAt'>) => void;
+  onSubmit: (data: {
+    schoolName: string;
+    type: 'improvement' | 'issue';  // Assuming two types: 'improvement' or 'issue'
+    message: string;
+    priority: 'low' | 'medium' | 'high';  // Assuming priority can be low, medium, or high
+  }) => void;
 }
 
-export function FeedbackForm({ resourcePlanId, onSubmit }: FeedbackFormProps) {
+export function FeedbackForm({ onSubmit }: FeedbackFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Omit<ResourceFeedback, 'id' | 'submittedAt'>>();
+  } = useForm<{
+    schoolName: string;
+    type: 'improvement' | 'issue';
+    message: string;
+    priority: 'low' | 'medium' | 'high';
+  }>();
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white rounded-lg shadow-md p-6"
     >
-      <h3 className="text-lg font-semibold mb-4">Resource Feedback</h3>
+      <h3 className="text-lg font-semibold mb-4">Feedback Form</h3>
 
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Resource Quality
+            School Name
           </label>
-          <div className="flex items-center gap-2">
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <label key={rating} className="cursor-pointer">
-                <input
-                  type="radio"
-                  {...register('quality', {
-                    required: 'Please rate the quality',
-                  })}
-                  value={rating}
-                  className="sr-only"
-                />
-                <Star
-                  className={`h-8 w-8 ${
-                    rating <= (register('quality').value || 0)
-                      ? 'text-yellow-400 fill-current'
-                      : 'text-gray-300'
-                  }`}
-                />
-              </label>
-            ))}
-          </div>
-          {errors.quality && (
+          <input
+            {...register('schoolName', {
+              required: 'Please provide the school name',
+            })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Enter school name"
+          />
+          {errors.schoolName && (
             <p className="mt-1 text-sm text-red-600">
-              {errors.quality.message}
+              {errors.schoolName.message}
             </p>
           )}
         </div>
 
         <div>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              {...register('timelyDelivery')}
-              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            <span className="text-sm font-medium text-gray-700">
-              Resources were delivered on time
-            </span>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Type
           </label>
+          <div className="flex gap-4">
+            <label>
+              <input
+                type="radio"
+                {...register('type', { required: 'Please select a type' })}
+                value="improvement"
+                className="mr-2"
+              />
+              Improvement
+            </label>
+            <label>
+              <input
+                type="radio"
+                {...register('type', { required: 'Please select a type' })}
+                value="issue"
+                className="mr-2"
+              />
+              Issue
+            </label>
+          </div>
+          {errors.type && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.type.message}
+            </p>
+          )}
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Suggestions for Improvement
+            Message
           </label>
           <textarea
-            {...register('suggestions', {
-              required: 'Please provide your suggestions',
+            {...register('message', {
+              required: 'Please provide a message',
             })}
             rows={4}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="Share your thoughts on how we can improve..."
+            placeholder="Enter your feedback message"
           />
-          {errors.suggestions && (
+          {errors.message && (
             <p className="mt-1 text-sm text-red-600">
-              {errors.suggestions.message}
+              {errors.message.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Priority
+          </label>
+          <select
+            {...register('priority', { required: 'Please select a priority' })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          {errors.priority && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.priority.message}
             </p>
           )}
         </div>

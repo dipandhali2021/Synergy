@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ResourcePlan } from '../../types/resourceAllocation';
 import {
   Package,
@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   DollarSign,
 } from 'lucide-react';
+import axios from 'axios';
 
 interface ResourcePlanCardProps {
   plan: ResourcePlan;
@@ -22,6 +23,12 @@ export function ResourcePlanCard({
   onReject,
   onModify,
 }: ResourcePlanCardProps) {
+
+
+  useEffect(() => {
+    console.log('ResourcePlanCard rendered', plan);
+  }, []);
+
   const getStatusColor = (status: ResourcePlan['status']) => {
     switch (status) {
       case 'approved':
@@ -48,13 +55,42 @@ export function ResourcePlanCard({
     }
   };
 
+  const handleApprove = async (planId: string) => {
+    try {
+      await axios.put(`http://localhost:5000/api/resource-plans/approve/${planId}`);
+      onApprove(planId); // Trigger the fetchPlans callback
+      window.location.reload();
+    } catch (error) {
+      console.error("Error approving resource plan:", error);
+    }
+  };
+  
+  const handleReject = async (planId: string) => {
+    try {
+      await axios.put(`http://localhost:5000/api/resource-plans/reject/${planId}`);
+      onReject(planId); // Trigger the fetchPlans callback
+      window.location.reload();
+    } catch (error) {
+      console.error("Error rejecting resource plan:", error);
+    }
+  };
+  
+  const handleModify = async (planId: string) => {
+    try {
+      await axios.put(`http://localhost:5000/api/resource-plans/modify/${planId}`, { status: 'modified' });
+      onModify(planId); // Trigger the fetchPlans callback
+      window.location.reload();
+    } catch (error) {
+      console.error("Error modifying resource plan:", error);
+    }
+  };
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-start justify-between mb-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Package className="h-5 w-5 text-indigo-600" />
-            <h3 className="text-lg font-semibold">Resource Plan #{plan.id}</h3>
+            <h3 className="text-lg font-semibold">Resource Plan #{plan.number}</h3>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Clock className="h-4 w-4" />
@@ -77,7 +113,7 @@ export function ResourcePlanCard({
               plan.priority
             )}`}
           >
-            {plan.priority.charAt(0).toUpperCase() + plan.priority.slice(1)}
+            {/* {plan.priority.charAt(0).toUpperCase() + plan.priority.slice(1)} */}
           </span>
         </div>
       </div>
@@ -92,7 +128,7 @@ export function ResourcePlanCard({
           <div className="flex items-center gap-1">
             <DollarSign className="h-4 w-4 text-gray-600" />
             <span className="font-semibold">
-              {plan.totalEstimatedCost.toLocaleString()}
+              {/* {plan.totalEstimatedCost.toLocaleString()} */}
             </span>
           </div>
         </div>
@@ -101,21 +137,21 @@ export function ResourcePlanCard({
       {plan.status === 'pending' && (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => onApprove(plan.id)}
+            onClick={() => handleApprove(plan.id)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
           >
             <CheckCircle className="h-4 w-4" />
             Approve
           </button>
           <button
-            onClick={() => onModify(plan.id)}
+            onClick={() => handleModify(plan.id)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
           >
             <AlertTriangle className="h-4 w-4" />
             Modify
           </button>
           <button
-            onClick={() => onReject(plan.id)}
+            onClick={() => handleReject(plan.id)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
           >
             <XCircle className="h-4 w-4" />
