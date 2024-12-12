@@ -25,23 +25,18 @@ interface PerformanceOverviewProps {
 
 export function PerformanceOverview({ school }: PerformanceOverviewProps) {
   const performanceOverview = school.performanceOverview;
-  const performanceData = [
-    { metric: 'Academic Achievement', value: 23 },
-    { metric: 'Teacher-Student Ratio', value: 34 },
-    { metric: 'Infrastructure', value: 24 },
-    { metric: 'Resource Availability', value: 34 },
-  ];
 
-  const trendData = school.performanceTrends.map((item) => ({
-    month: item.month,
-    performance: item.performance,
-    attendance: item.attendance,
-  }));
+  const performanceData = [
+    { metric: 'Academic Achievement', value: performanceOverview.academicAchievement },
+    { metric: 'Teacher-Student Ratio', value: performanceOverview.teacherStudentRatio },
+    { metric: 'Infrastructure', value: performanceOverview.infrastructure },
+    { metric: 'Resource Availability', value: performanceOverview.resourceAvailability },
+  ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Performance Radar Chart */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      {/* <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4">Performance Overview</h3>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
@@ -59,14 +54,14 @@ export function PerformanceOverview({ school }: PerformanceOverviewProps) {
             </RadarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </div> */}
 
-      {/* Performance Trend */}
+      Performance Trend
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4">Performance Trends</h3>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trendData}>
+            <LineChart data={performanceData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis domain={[0, 100]} />

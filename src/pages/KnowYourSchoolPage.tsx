@@ -117,14 +117,14 @@ console.log(schools);
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters - Desktop */}
-          <div className="hidden lg:block w-80 flex-shrink-0">
+          {/* <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="sticky top-8">
               <FilterPanel filters={filters} onFilterChange={setFilters} />
             </div>
-          </div>
+          </div> */}
 
           {/* Filters - Mobile */}
-          <div className="lg:hidden">
+          {/* <div className="lg:hidden">
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
               className="w-full flex items-center justify-between px-4 py-3 bg-white rounded-lg shadow-sm border border-gray-200"
@@ -152,7 +152,7 @@ console.log(schools);
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </div> */}
 
           {/* Main Content Area */}
           <div className="flex-1">

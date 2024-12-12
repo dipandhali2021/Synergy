@@ -46,7 +46,7 @@ export function SchoolDetailPage() {
     { id: 'overview', label: 'Overview', icon: Building2 },
     { id: 'facilities', label: 'Facilities & Infrastructure', icon: Building2 },
     { id: 'demographics', label: 'Students & Teachers', icon: Users },
-    { id: 'compliance', label: 'Grants & Compliance', icon: Calendar },
+    // { id: 'compliance', label: 'Grants & Compliance', icon: Calendar },
     { id: 'checklist', label: 'Compliance Checklist', icon: ClipboardCheck },
     { id: 'management', label: 'Management & Governance', icon: Settings },
   ];
@@ -146,7 +146,7 @@ export function SchoolDetailPage() {
           {activeTab === 'overview' && (
             <>
               <BasicInfo school={school[0]} />
-              <PerformanceOverview school={school} />
+              {/* <PerformanceOverview school={school[0]} /> */}
               {/* <InfrastructureOverview school={school[0]} /> */}
             </>
           )}
@@ -163,10 +163,10 @@ export function SchoolDetailPage() {
           )}
 
           {activeTab === 'performance' && (
-            <PerformanceOverview school={school} />
+            <PerformanceOverview school={school[0]} />
           )}
 
-          {activeTab === 'compliance' && <GrantsCompliance school={school[0]} />}
+          {/* {activeTab === 'compliance' && <GrantsCompliance school={school[0]} />} */}
 
           {activeTab === 'checklist' && <ComplianceChecklist school={school[0]} />}
 

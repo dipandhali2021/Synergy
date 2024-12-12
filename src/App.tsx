@@ -59,7 +59,7 @@ export default function App() {
                 />
 
                 <Route path="/progress" element={<ProgressPage />} />
-                {/* <Route path="/engagement" element={<EngagementPage />} /> */}
+                <Route path="/engagement" element={<EngagementPage />} />
                 <Route path="/schools" element={<KnowYourSchoolPage />} />
                 <Route path="/school/detail/:id" element={<SchoolDetailPage />} />
                 <Route path="/registration-pending" element={<RegistrationPendingPage/>}/>

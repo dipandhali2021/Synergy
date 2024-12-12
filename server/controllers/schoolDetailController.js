@@ -500,7 +500,7 @@ export const createSchoolDetail = async (req, res) => {
       currentStructure:
         predicted_rating < 75 ? 'Odd Structure' : 'Standard Structure',
       recommendedStructure: 'Standard Structure',
-      transitionStatus: 'pending',
+      transitionStatus: 'in-progress',
       performanceBand: performanceBand,
       qualityScore: predicted_rating,
       studentCount: savedSchool.totalStudents,
