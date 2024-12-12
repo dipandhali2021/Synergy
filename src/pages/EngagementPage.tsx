@@ -105,7 +105,7 @@ export function EngagementPage() {
             </div>
 
             {/* AI Assistant */}
-            <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+            {/* <div className="bg-white rounded-lg shadow-md p-6 mt-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <Bot className="h-6 w-6 text-purple-600" />
@@ -118,7 +118,7 @@ export function EngagementPage() {
               <button className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                 Ask AI Assistant
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Main Content Area */}

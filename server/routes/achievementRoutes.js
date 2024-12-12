@@ -4,7 +4,8 @@ import { auth } from '../middleware/auth.js';
 import {
   getAchievements,
   awardAchievement,
-  shareAchievement
+  shareAchievement,
+  getAllAcheivements
 } from '../controllers/achievementController.js';
 
 const router = express.Router();
@@ -25,5 +26,7 @@ router.post('/:userId',
 );
 
 router.post('/:id/share', auth, shareAchievement);
+
+router.get('/:schoolId',getAllAcheivements);
 
 export default router;

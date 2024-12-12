@@ -43,9 +43,13 @@ export function SchoolList({
     );
   }
 
+  const itemsPerPage = 10;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentSchools = schools.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className="space-y-4">
-      {schools.map((school) => (
+      {currentSchools.map((school) => (
         <SchoolCard
           key={school.id}
           school={school}
@@ -56,7 +60,7 @@ export function SchoolList({
       <Pagination
         currentPage={currentPage}
         totalItems={totalResults}
-        itemsPerPage={10}
+        itemsPerPage={itemsPerPage}
         onPageChange={onPageChange}
       />
     </div>

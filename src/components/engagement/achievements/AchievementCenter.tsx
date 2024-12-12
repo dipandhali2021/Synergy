@@ -4,15 +4,17 @@ import { AchievementCard } from './AchievementCard';
 import { achievementService } from '../../../services/achievementService';
 import { Achievement, AchievementsResponse } from '../../../types/achievement';
 import { LoadingSpinner } from '../../common/LoadingSpinner';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export function AchievementCenter() {
+  const {user}=useAuth();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [selectedUserId, setSelectedUserId] = useState('6752c73dae58e09690f2251c'); // Default user ID
+  const [selectedUserId, setSelectedUserId] = useState(user?.id); // Default user ID
 
   useEffect(() => {
     fetchAchievements();
@@ -98,14 +100,7 @@ export function AchievementCenter() {
         </select>
 
         {/* School/User Selection */}
-        <select
-          value={selectedUserId}
-          onChange={(e) => setSelectedUserId(e.target.value)}
-          className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="67513b1368152a2233c3a7a6">School 1</option>
-          {/* Add more schools as needed */}
-        </select>
+       
       </div>
 
       <div className="grid grid-cols-1 gap-6">

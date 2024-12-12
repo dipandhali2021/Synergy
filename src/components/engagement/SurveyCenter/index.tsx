@@ -109,7 +109,7 @@ export function SurveyCenter() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Survey Center</h2>
-        {user?.role === 'SUPER_ADMIN' && (
+        {/* {user?.role === 'SUPER_ADMIN' && (
           <button
             onClick={() => setShowCreateModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -117,7 +117,7 @@ export function SurveyCenter() {
             <Plus className="h-5 w-5" />
             Create Survey
           </button>
-        )}
+        )} */}
       </div>
 
       <div className="flex gap-4">

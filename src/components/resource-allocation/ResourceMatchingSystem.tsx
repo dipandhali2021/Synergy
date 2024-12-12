@@ -12,6 +12,7 @@ import {
   Search,
   Loader2,
 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface SchoolMatch {
   schoolId: string;
@@ -37,7 +38,7 @@ export function ResourceMatchingSystem() {
   const [matches, setMatches] = useState<SchoolMatch[]>([]);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
-
+  const {user} = useAuth();
   const searchSchools = async (schoolId: string) => {
     if (!schoolId) return;
     setSearching(true);
@@ -85,6 +86,7 @@ export function ResourceMatchingSystem() {
     }
   };
 
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -107,7 +109,7 @@ export function ResourceMatchingSystem() {
           <div className="relative">
             <input
               type="text"
-              value={schoolSearchTerm}
+              value={user?.schoolId || schoolSearchTerm}
               onChange={(e) => {
                 setSchoolSearchTerm(e.target.value);
                 searchSchools(e.target.value);

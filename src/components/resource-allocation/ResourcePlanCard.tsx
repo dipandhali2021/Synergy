@@ -117,7 +117,7 @@ export function ResourcePlanCard({
           </span>
         </div>
       </div>
-
+            
       <div className="space-y-4 mb-6">
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <span className="text-gray-600">Total Resources</span>
@@ -143,13 +143,13 @@ export function ResourcePlanCard({
             <CheckCircle className="h-4 w-4" />
             Approve
           </button>
-          <button
+          {/* <button
             onClick={() => handleModify(plan.id)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
           >
             <AlertTriangle className="h-4 w-4" />
             Modify
-          </button>
+          </button> */}
           <button
             onClick={() => handleReject(plan.id)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"

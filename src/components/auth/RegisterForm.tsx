@@ -143,9 +143,7 @@ export function RegisterForm({ onSubmit, loading, error }: RegisterFormProps) {
             <option value="NORMAL">Normal User</option>
             <option value="SCHOOL_ADMIN">School Administrator</option>
             <option value="SUPER_ADMIN">Super Administrator</option>
-            <option value="POLICY_MAKER">Policy Maker</option>
-            <option value="SUPPORT_STAFF">Support Staff</option>
-            <option value="AUDITOR">Auditor</option>
+            
           </select>
           <Building2 className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
         </div>
@@ -174,7 +172,7 @@ export function RegisterForm({ onSubmit, loading, error }: RegisterFormProps) {
         </div>
       )}
 
-      {selectedRole !== 'NORMAL' && (
+      {/* {selectedRole !== 'NORMAL' && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Verification Documents (Optional)
@@ -213,7 +211,7 @@ export function RegisterForm({ onSubmit, loading, error }: RegisterFormProps) {
             </ul>
           )}
         </div>
-      )}
+      )} */}
 
       <button
         type="submit"

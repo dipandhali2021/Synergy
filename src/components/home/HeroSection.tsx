@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, ArrowRight, School } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 export function HeroSection() {
   const { user } = useAuth();
   console.log(user);
+  const navigate = useNavigate();
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -26,6 +27,7 @@ export function HeroSection() {
 
       if (response.data) {
         toast.success('Data analyzed successfully');
+        navigate("/report", { state: { backendResponse: response.data } });
       }
     } catch (error) {
       toast.error('Failed to analyze school data');

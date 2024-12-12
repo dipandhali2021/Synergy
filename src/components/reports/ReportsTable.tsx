@@ -154,9 +154,7 @@ export function ReportsTable({
       <div className="px-6 py-4 flex items-center justify-between border-t">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-700">
-            Showing {(page - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(page * itemsPerPage, data.length)} of {data.length}{" "}
-            entries
+            Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, data.length)} of {data.length} entries
           </span>
         </div>
         <div className="flex items-center gap-2">

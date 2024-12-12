@@ -36,6 +36,23 @@ export const awardAchievement = async (req, res) => {
   }
 };
 
+
+export const getAllAcheivements = async (req, res) => {
+  try {
+    const { schoolId } = req.params;
+    const achievements = await Achievement.find({ school: schoolId })
+      .sort({ earnedDate: -1 });
+
+    const totalPoints = achievements.reduce((sum, achievement) => 
+      sum + achievement.points, 0);
+
+    res.json({ achievements, totalPoints });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
 export const shareAchievement = async (req, res) => {
   try {
     const achievement = await Achievement.findById(req.params.id);

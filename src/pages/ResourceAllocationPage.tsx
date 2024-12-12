@@ -127,7 +127,7 @@ const navigationItems: NavItem[] = [
 
 export function ResourceAllocationPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('transparency');
   const [plans, setPlans] = useState<ResourcePlan[]>([]);
   const [metrics, setMetrics] = useState<ResourceMetrics>({
     utilizationRate: 0.75,
@@ -149,7 +149,8 @@ export function ResourceAllocationPage() {
   console.log(user)
 
   const navigationItems: NavItem[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: Layout, category: 'overview' },
+    ...(user?.role === 'SCHOOL_ADMIN'
+    ?[{ id: 'dashboard', label: 'Dashboard', icon: Layout, category: 'overview' }]:[]),
     ...(user?.role === 'SUPER_ADMIN'
       ? [{ id: 'plans', label: 'Resource Plans', icon: Package, category: 'planning' }]
       : []),
@@ -204,8 +205,7 @@ export function ResourceAllocationPage() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
-        return <RoleSpecificDashboard />;
+      
       case 'plans':
         return (
           <div className="space-y-6">
@@ -222,6 +222,8 @@ export function ResourceAllocationPage() {
         );
       case 'ai':
         return <AIResourcePrioritization />;
+      case 'dashboard':
+        return <RoleSpecificDashboard />;
       case 'map':
         return (
           <ResourceAllocationMap
@@ -243,8 +245,7 @@ export function ResourceAllocationPage() {
         return <PerformanceIncentives />;
       case 'emergency':
         return <EmergencyResourceCenter />;
-      case 'iot':
-        return <IoTMonitoringDashboard />;
+      
       case 'feedback':
         return <ContinuousFeedback />;
       case 'transparency':
@@ -252,7 +253,7 @@ export function ResourceAllocationPage() {
       case 'public':
         return <PublicResourceDashboard />;
       default:
-        return null;
+        return <FinancialTransparency />;
     }
   };
 
