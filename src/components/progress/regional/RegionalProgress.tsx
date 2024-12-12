@@ -34,6 +34,7 @@ export function RegionalProgress() {
           className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
         >
           {[
+            'WEST BENGAL',
             'Uttar Pradesh',
             'ANDHRA PRADESH',
             'ARUNACHAL PRADESH',
@@ -62,7 +63,7 @@ export function RegionalProgress() {
             'TRIPURA',
             
             'UTTARAKHAND',
-            'WEST BENGAL',
+            
           ].map((state) => (
             <option key={state} value={state}>
               {state}

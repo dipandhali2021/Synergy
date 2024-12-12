@@ -91,8 +91,11 @@ export function ResourcePlanCard({
           <div className="flex items-center gap-2 mb-2">
             <Package className="h-5 w-5 text-indigo-600" />
             <h3 className="text-lg font-semibold">Resource Plan #{plan.number}</h3>
+            <h3 className="text-sm font-semibold">UDISE Code: {plan.schoolId}</h3>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 mb-2">
+          </div>
             <Clock className="h-4 w-4" />
             <span>
               Created: {new Date(plan.createdAt).toLocaleDateString()}

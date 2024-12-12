@@ -124,7 +124,7 @@ export function ResourceAllocationMap({
         : status === "pending"
         ? "blue"
         : status === "approved"
-        ? "orange"
+        ? "green"
         : "red";
 
     return new Icon({
