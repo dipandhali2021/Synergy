@@ -21,12 +21,6 @@ export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
             className="w-full pl-12 pr-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-white/25 focus:border-transparent"
           />
         </div>
-        <button className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-lg hover:bg-white/20 transition-colors">
-          <Mic className="h-5 w-5" />
-        </button>
-        <button className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-lg hover:bg-white/20 transition-colors">
-          <MapPin className="h-5 w-5" />
-        </button>
       </div>
     </div>
   );

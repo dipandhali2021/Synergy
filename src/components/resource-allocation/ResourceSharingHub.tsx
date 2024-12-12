@@ -286,12 +286,12 @@ export function ResourceSharingHub() {
                   </div>
                 </div>
 
-                <button
+                {/* <button
                   onClick={() => handleRequestResource(resource._id)}
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
                 >
                   Request Resource
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

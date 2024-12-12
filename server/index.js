@@ -27,6 +27,7 @@ import standardRoutes from './routes/standardRoutes.js';
 import guideRoutes from './routes/guideRoutes.js';
 import trainingRoutes from './routes/trainingRoutes.js';
 import testRoutes from './routes/testRoutes.js';
+import activityRoutes from './routes/activityRoutes.js';
 
 dotenv.config();
 
@@ -67,6 +68,7 @@ app.use('/api/standardization', standardRoutes);
 app.use('/api/guides', guideRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/test',testRoutes);
+app.use('/api/activities', activityRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

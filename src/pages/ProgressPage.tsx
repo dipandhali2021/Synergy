@@ -7,6 +7,7 @@ import { ComparativeAnalysis } from '../components/progress/comparative/Comparat
 import { ChallengesDashboard } from '../components/progress/challenges/ChallengesDashboard';
 import { ReportsDashboard } from '../components/progress/reports/ReportsDashboard';
 import { SchoolProgressDashboard } from '../components/progress/school/SchoolProgressDashboard';
+import { useAuth } from '../contexts/AuthContext';
 
 type TabType =
   | 'national'
@@ -17,7 +18,11 @@ type TabType =
   | 'reports';
 
 export function ProgressPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('national');
+  const { user } = useAuth();
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+  const [activeTab, setActiveTab] = useState<TabType>(
+    isSuperAdmin ? 'reports' : 'national'
+  );
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -30,13 +35,24 @@ export function ProgressPage() {
       case 'challenges':
         return <ChallengesDashboard />;
       case 'reports':
-        return <ReportsDashboard />;
-      case 'national':
-        return <NationalOverview />;
+        return isSuperAdmin ? (
+          <ReportsDashboard />
+        ) : (
+          <RegionalProgress />
+        );
       default:
-        return <NationalOverview />;
+        return <RegionalProgress />;
+     
     }
   };
+
+  const availableTabs: TabType[] = [
+    'national',
+    'regional',
+    'school',
+    'comparative',
+    'challenges',
+  ];
 
   return (
     <div className="space-y-6">
@@ -50,7 +66,11 @@ export function ProgressPage() {
         </p>
       </div>
 
-      <ProgressTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      <ProgressTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        availableTabs={availableTabs}
+      />
 
       <div className="bg-white rounded-lg shadow-md">{renderTabContent()}</div>
     </div>

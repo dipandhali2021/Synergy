@@ -1,14 +1,15 @@
 import React from 'react';
-import { 
-  MessageSquare, 
-  ClipboardList, 
-  Calendar, 
+import {
+  MessageSquare,
+  ClipboardList,
+  Calendar,
   FileText,
   TrendingUp,
   Users,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { RecentActivity } from './RecentActivity';
 
 export function EngagementDashboard() {
   const quickActions = [
@@ -17,29 +18,29 @@ export function EngagementDashboard() {
       description: 'Share your experiences or ask questions',
       icon: MessageSquare,
       link: '#discussions',
-      color: 'bg-blue-50 text-blue-600'
+      color: 'bg-blue-50 text-blue-600',
     },
     {
       title: 'Take Active Surveys',
       description: 'Participate in ongoing surveys',
       icon: ClipboardList,
       link: '#surveys',
-      color: 'bg-green-50 text-green-600'
+      color: 'bg-green-50 text-green-600',
     },
     {
       title: 'Upcoming Events',
       description: 'View and register for events',
       icon: Calendar,
       link: '#events',
-      color: 'bg-purple-50 text-purple-600'
+      color: 'bg-purple-50 text-purple-600',
     },
     {
       title: 'Share Resources',
       description: 'Contribute to the resource library',
       icon: FileText,
       link: '#resources',
-      color: 'bg-yellow-50 text-yellow-600'
-    }
+      color: 'bg-yellow-50 text-yellow-600',
+    },
   ];
 
   return (
@@ -72,37 +73,14 @@ export function EngagementDashboard() {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold">Recent Activity</h2>
-          <Link 
-            to="#activity" 
+          {/* <Link
+            to="#activity"
             className="text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
           >
             View All <ArrowRight className="h-4 w-4" />
-          </Link>
+          </Link> */}
         </div>
-
-        <div className="space-y-4">
-          <ActivityItem
-            icon={MessageSquare}
-            color="text-blue-600 bg-blue-50"
-            title="New Discussion"
-            description="Infrastructure Planning Best Practices"
-            time="2 hours ago"
-          />
-          <ActivityItem
-            icon={Users}
-            color="text-green-600 bg-green-50"
-            title="New Connection"
-            description="Connected with Government High School, Kerala"
-            time="4 hours ago"
-          />
-          <ActivityItem
-            icon={TrendingUp}
-            color="text-purple-600 bg-purple-50"
-            title="Progress Update"
-            description="Completed 75% of standardization goals"
-            time="1 day ago"
-          />
-        </div>
+        <RecentActivity />
       </div>
 
       {/* Engagement Stats */}
@@ -130,38 +108,11 @@ export function EngagementDashboard() {
   );
 }
 
-function ActivityItem({ 
-  icon: Icon, 
-  color, 
-  title, 
-  description, 
-  time 
-}: { 
-  icon: React.ElementType;
-  color: string;
-  title: string;
-  description: string;
-  time: string;
-}) {
-  return (
-    <div className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50">
-      <div className={`p-2 rounded-lg ${color}`}>
-        <Icon className="h-5 w-5" />
-      </div>
-      <div className="flex-1">
-        <h4 className="font-medium">{title}</h4>
-        <p className="text-sm text-gray-600">{description}</p>
-        <span className="text-xs text-gray-500">{time}</span>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ 
-  title, 
-  value, 
-  trend, 
-  description 
+function StatCard({
+  title,
+  value,
+  trend,
+  description,
 }: {
   title: string;
   value: string;
@@ -175,9 +126,11 @@ function StatCard({
       <h3 className="text-sm text-gray-600 mb-2">{title}</h3>
       <div className="flex items-baseline gap-2">
         <span className="text-2xl font-bold">{value}</span>
-        <span className={`text-sm ${
-          isPositive ? 'text-green-600' : 'text-red-600'
-        }`}>
+        <span
+          className={`text-sm ${
+            isPositive ? 'text-green-600' : 'text-red-600'
+          }`}
+        >
           {trend}
         </span>
       </div>

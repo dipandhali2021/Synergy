@@ -61,4 +61,29 @@ export const surveyService = {
       throw error;
     }
   },
+
+  createService: async (data: Omit<Survey, '_id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const token = getToken();
+      const response = await axios.post(`${API_URL}/surveys`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateSurvey: async (id: string, data: Partial<Survey>) => {
+    try {
+      const token = getToken();
+      const response = await axios.put(`${API_URL}/surveys/${id}`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };

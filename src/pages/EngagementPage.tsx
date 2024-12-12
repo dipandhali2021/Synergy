@@ -17,44 +17,34 @@ import { SurveyCenter } from '../components/engagement/SurveyCenter';
 import { PolicyCenter } from '../components/engagement/PolicyCenter';
 import { StakeholderDirectory } from '../components/engagement/directory/StakeholderDirectory';
 import { EventsCalendar } from '../components/engagement/events/EventsCalendar';
-import { ResourceHub } from '../components/engagement/resources/ResourceHub';
-import { ProgressDashboard } from '../components/engagement/progress/ProgressDashboard';
 import { AchievementCenter } from '../components/engagement/achievements/AchievementCenter';
 import { SupportCenter } from '../components/engagement/support/SupportCenter';
 
 type EngagementSection =
-  | 'dashboard'
   | 'discussions'
   | 'surveys'
   | 'policies'
   | 'directory'
   | 'events'
-  | 'resources'
-  | 'progress'
   | 'achievements'
   | 'support';
 
 export function EngagementPage() {
   const [activeSection, setActiveSection] =
-    useState<EngagementSection>('dashboard');
+    useState<EngagementSection>('discussions');
 
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
     { id: 'discussions', label: 'Discussions', icon: MessageSquare },
     { id: 'surveys', label: 'Surveys', icon: ClipboardList },
     { id: 'policies', label: 'Policy Updates', icon: Bell },
     { id: 'directory', label: 'Directory', icon: Users },
     { id: 'events', label: 'Events', icon: Calendar },
-    { id: 'resources', label: 'Resources', icon: FileText },
-    { id: 'progress', label: 'Progress', icon: TrendingUp },
     { id: 'achievements', label: 'Achievements', icon: Trophy },
     { id: 'support', label: 'Support', icon: Headphones },
   ];
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'dashboard':
-        return <EngagementDashboard />;
       case 'discussions':
         return <DiscussionForum />;
       case 'surveys':
@@ -65,10 +55,6 @@ export function EngagementPage() {
         return <StakeholderDirectory />;
       case 'events':
         return <EventsCalendar />;
-      case 'resources':
-        return <ResourceHub />;
-      case 'progress':
-        return <ProgressDashboard />;
       case 'achievements':
         return <AchievementCenter />;
       case 'support':

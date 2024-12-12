@@ -33,7 +33,7 @@ export const states = [
   { code: 'TN', name: 'TAMIL NADU' },
   { code: 'TG', name: 'TELANGANA' },
   { code: 'TR', name: 'TRIPURA' },
-  { code: 'UP', name: 'UTTAR PRADESH' },
+  { code: 'UP', name: 'Uttar Pradesh' },
   { code: 'UT', name: 'UTTARAKHAND' },
   { code: 'WB', name: 'WEST BENGAL' }
 ];

@@ -59,7 +59,7 @@ export function RegionalProgress() {
             'TAMIL NADU',
             'TELANGANA',
             'TRIPURA',
-            'UTTAR PRADESH',
+            'Uttar Pradesh',
             'UTTARAKHAND',
             'WEST BENGAL',
           ].map((state) => (

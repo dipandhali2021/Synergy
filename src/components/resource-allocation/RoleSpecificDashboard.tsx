@@ -788,13 +788,13 @@ export function RoleSpecificDashboard() {
               <Settings className="h-5 w-5 text-gray-500" />
               Submit New Request
             </button>
-            <button
+            {/* <button
               className="w-full px-4 py-2 text-left hover:bg-gray-50 rounded-lg flex items-center gap-2"
               onClick={() => setCurrentView('REPORTS')}
             >
               <FileText className="h-5 w-5 text-gray-500" />
               View Reports
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -113,7 +113,7 @@ export function ResourcePlanCard({
               plan.priority
             )}`}
           >
-            {/* {plan.priority.charAt(0).toUpperCase() + plan.priority.slice(1)} */}
+            {plan.priority.charAt(0).toUpperCase() + plan.priority.slice(1)}
           </span>
         </div>
       </div>
@@ -121,14 +121,14 @@ export function ResourcePlanCard({
       <div className="space-y-4 mb-6">
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <span className="text-gray-600">Total Resources</span>
-          <span className="font-semibold">{plan.resources.length}</span>
+          <span className="font-semibold">{plan.resources[0].quantity}</span>
         </div>
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <span className="text-gray-600">Estimated Cost</span>
           <div className="flex items-center gap-1">
-            <DollarSign className="h-4 w-4 text-gray-600" />
+            
             <span className="font-semibold">
-              {/* {plan.totalEstimatedCost.toLocaleString()} */}
+            ₹{plan.totalEstimatedCost.toLocaleString()}
             </span>
           </div>
         </div>

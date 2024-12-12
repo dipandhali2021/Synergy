@@ -34,6 +34,7 @@ import { ResourceSharingHub } from '../components/resource-allocation/ResourceSh
 import { EmergencyResourceCenter } from '../components/resource-allocation/EmergencyResourceCenter';
 import { resourceAllocationService } from '../services/resourceAllocationService';
 import { ResourcePlan, ResourceMetrics } from '../types/resourceAllocation';
+import { useAuth } from '../contexts/AuthContext';
 
 const mockLocations = [
   {
@@ -90,12 +91,6 @@ const navigationItems: NavItem[] = [
     icon: TrendingUp,
     category: 'analytics',
   },
-  // {
-  //   id: 'metrics',
-  //   label: 'Performance Metrics',
-  //   icon: BarChart2,
-  //   category: 'analytics',
-  // },
   {
     id: 'matching',
     label: 'Resource Matching',
@@ -108,31 +103,12 @@ const navigationItems: NavItem[] = [
     icon: Users,
     category: 'management',
   },
-  // {
-  //   id: 'training',
-  //   label: 'Training Center',
-  //   icon: BookOpen,
-  //   category: 'management',
-  // },
-  // {
-  //   id: 'incentives',
-  //   label: 'Incentives',
-  //   icon: Trophy,
-  //   category: 'management',
-  // },
   {
     id: 'emergency',
     label: 'Emergency Center',
     icon: AlertTriangle,
     category: 'monitoring',
   },
-  // { id: 'iot', label: 'IoT Monitoring', icon: Wifi, category: 'monitoring' },
-  // {
-  //   id: 'feedback',
-  //   label: 'Feedback System',
-  //   icon: MessageSquare,
-  //   category: 'monitoring',
-  // },
   {
     id: 'transparency',
     label: 'Financial Overview',
@@ -147,15 +123,10 @@ const navigationItems: NavItem[] = [
   },
 ];
 
-const categoryLabels: Record<TabCategory, string> = {
-  overview: 'Overview',
-  planning: 'Planning & Allocation',
-  monitoring: 'Monitoring & Tracking',
-  management: 'Resource Management',
-  analytics: 'Analytics & Insights',
-};
+
 
 export function ResourceAllocationPage() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [plans, setPlans] = useState<ResourcePlan[]>([]);
   const [metrics, setMetrics] = useState<ResourceMetrics>({
@@ -164,6 +135,64 @@ export function ResourceAllocationPage() {
     deliveryEfficiency: 0.82,
     satisfactionScore: 0.88,
   });
+
+  const categoryLabels: Record<TabCategory, string> = {
+    overview: 'Overview',
+    ...(user?.role === 'SUPER_ADMIN' && {
+      planning: 'Planning & Allocation',
+    }),
+    monitoring: 'Monitoring & Tracking',
+    management: 'Resource Management',
+    analytics: 'Analytics & Insights',
+  };
+
+  console.log(user)
+
+  const navigationItems: NavItem[] = [
+    { id: 'dashboard', label: 'Dashboard', icon: Layout, category: 'overview' },
+    ...(user?.role === 'SUPER_ADMIN'
+      ? [{ id: 'plans', label: 'Resource Plans', icon: Package, category: 'planning' }]
+      : []),
+    { id: 'ai', label: 'AI Analysis', icon: Brain, category: 'analytics' },
+    ...(user?.role === 'SUPER_ADMIN'
+      ? [{ id: 'map', label: 'Allocation Map', icon: Map, category: 'monitoring' }]:[]),
+    {
+      id: 'simulator',
+      label: 'Impact Simulator',
+      icon: TrendingUp,
+      category: 'analytics',
+    },
+    {
+      id: 'matching',
+      label: 'Resource Matching',
+      icon: Share2,
+      category: 'management',
+    },
+    {
+      id: 'sharing',
+      label: 'Resource Sharing',
+      icon: Users,
+      category: 'management',
+    },
+    {
+      id: 'emergency',
+      label: 'Emergency Center',
+      icon: AlertTriangle,
+      category: 'monitoring',
+    },
+    {
+      id: 'transparency',
+      label: 'Financial Overview',
+      icon: DollarSign,
+      category: 'overview',
+    },
+    {
+      id: 'public',
+      label: 'Public Dashboard',
+      icon: Globe,
+      category: 'overview',
+    },
+  ];
 
   useEffect(() => {
     const fetchPlans = async () => {

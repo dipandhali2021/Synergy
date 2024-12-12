@@ -1,6 +1,7 @@
 import Survey from '../models/Survey.js';
 import { validationResult } from 'express-validator';
 
+// Get a list of all surveys
 export const getSurveys = async (req, res) => {
   try {
     const { page = 1, limit = 10, status, targetAudience } = req.query;
@@ -25,13 +26,14 @@ export const getSurveys = async (req, res) => {
     res.json({
       surveys,
       totalPages: Math.ceil(total / limit),
-      currentPage: page
+      currentPage: page,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+// Create a new survey
 export const createSurvey = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -41,7 +43,7 @@ export const createSurvey = async (req, res) => {
 
     const survey = new Survey({
       ...req.body,
-      creator: req.user.id
+      creator: req.user.id,
     });
 
     const savedSurvey = await survey.save();
@@ -53,10 +55,11 @@ export const createSurvey = async (req, res) => {
   }
 };
 
+// Submit a response to a survey
 export const submitResponse = async (req, res) => {
   try {
     const survey = await Survey.findById(req.params.id);
-    
+
     if (!survey) {
       return res.status(404).json({ message: 'Survey not found' });
     }
@@ -70,7 +73,7 @@ export const submitResponse = async (req, res) => {
     }
 
     const alreadyResponded = survey.responses.some(
-      response => response.user.toString() === req.user.id
+      (response) => response.user.toString() === req.user.id
     );
 
     if (alreadyResponded) {
@@ -79,7 +82,7 @@ export const submitResponse = async (req, res) => {
 
     survey.responses.push({
       user: req.user.id,
-      answers: req.body.answers
+      answers: req.body.answers,
     });
 
     await survey.save();
@@ -89,10 +92,13 @@ export const submitResponse = async (req, res) => {
   }
 };
 
+// Get survey analytics
 export const getSurveyAnalytics = async (req, res) => {
   try {
-    const survey = await Survey.findById(req.params.id)
-      .populate('responses.user', 'name');
+    const survey = await Survey.findById(req.params.id).populate(
+      'responses.user',
+      'name'
+    );
 
     if (!survey) {
       return res.status(404).json({ message: 'Survey not found' });
@@ -100,26 +106,51 @@ export const getSurveyAnalytics = async (req, res) => {
 
     const analytics = {
       totalResponses: survey.responses.length,
-      questionAnalytics: survey.questions.map(question => {
-        const answers = survey.responses.map(response => 
-          response.answers.find(a => a.question.toString() === question._id.toString())
+      questionAnalytics: survey.questions.map((question) => {
+        const answers = survey.responses.map((response) =>
+          response.answers.find(
+            (a) => a.question.toString() === question._id.toString()
+          )
         );
 
         if (question.type === 'multiple-choice') {
           const optionCounts = {};
-          answers.forEach(answer => {
+          answers.forEach((answer) => {
             if (answer && answer.answer) {
-              optionCounts[answer.answer] = (optionCounts[answer.answer] || 0) + 1;
+              optionCounts[answer.answer] =
+                (optionCounts[answer.answer] || 0) + 1;
             }
           });
           return { question: question.question, optionCounts };
         }
 
         return { question: question.question, responses: answers.length };
-      })
+      }),
     };
 
     res.json(analytics);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update survey
+export const updateSurvey = async (req, res) => {
+  try {
+    const survey = await Survey.findById(req.params.id);
+    
+    if (!survey) {
+      return res.status(404).json({ message: 'Survey not found' });
+    }
+
+    if (survey.creator.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this survey' });
+    }
+
+    Object.assign(survey, req.body);
+    await survey.save();
+    
+    res.json(survey);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
