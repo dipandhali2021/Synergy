@@ -88,14 +88,7 @@ export function ToolsList() {
       icon: FileText,
       category: 'compliance',
     },
-    {
-      id: 'progress-tracker',
-      title: 'Progress Tracking Dashboard',
-      description: 'Interactive dashboard to monitor implementation progress',
-      icon: BarChart2,
-      link: '/progress',
-      category: 'monitoring',
-    },
+   
   ];
 
   return (
@@ -132,15 +125,6 @@ export function ToolsList() {
             </button>
           );
         })}
-      </div>
-
-      <div className="bg-yellow-50 p-4 rounded-lg">
-        <h3 className="font-semibold text-yellow-800 mb-2">Note</h3>
-        <p className="text-yellow-700 text-sm">
-          Some tools will open in external applications (like Google
-          Docs/Sheets) where you can make a copy for your use. Progress tracking
-          tools are integrated within this platform.
-        </p>
       </div>
     </div>
   );

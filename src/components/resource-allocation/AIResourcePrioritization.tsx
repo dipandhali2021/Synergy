@@ -1,47 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, TrendingUp, AlertTriangle } from 'lucide-react';
-import * as tf from '@tensorflow/tfjs';
+import { Brain, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
+import axios from 'axios';
 
-interface PrioritizationMetrics {
-  urgencyScore: number;
-  predictedNeed: number;
-  contextScore: number;
+interface AnalyzedRequest {
+  requestId: string;
+  schoolId: string;
+  schoolName: string;
+  requestDetails: {
+    type: string;
+    quantity: number;
+    cost: number;
+    priority: string;
+  };
+  analysis: {
+    urgencyScore: number;
+    predictedNeed: number;
+    contextScore: number;
+    averageScore: number;
+    recommendations: string[];
+  };
 }
 
 export function AIResourcePrioritization() {
-  const [metrics, setMetrics] = useState<PrioritizationMetrics | null>(null);
+  const [analyzedRequests, setAnalyzedRequests] = useState<AnalyzedRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const analyzePriority = async () => {
+    const fetchAnalysis = async () => {
       try {
-        // Initialize TensorFlow model
-        const model = await tf.sequential();
-
-        // Add layers (simplified example)
-        model.add(tf.layers.dense({ units: 3, inputShape: [3] }));
-        model.add(tf.layers.dense({ units: 3, activation: 'sigmoid' }));
-
-        // Mock input data - in production, this would come from your data sources
-        const inputData = tf.tensor2d([[0.8, 0.6, 0.9]]); // Example features
-
-        // Make prediction
-        const prediction = model.predict(inputData) as tf.Tensor;
-        const values = await prediction.data();
-
-        setMetrics({
-          urgencyScore: values[0],
-          predictedNeed: values[1],
-          contextScore: values[2],
-        });
-      } catch (error) {
-        console.error('Error in AI analysis:', error);
+        const response = await axios.get('http://localhost:5000/api/resource-plans/analyze');
+        setAnalyzedRequests(response.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching analysis');
       } finally {
         setLoading(false);
       }
     };
 
-    analyzePriority();
+    fetchAnalysis();
   }, []);
 
   if (loading) {
@@ -56,68 +53,116 @@ export function AIResourcePrioritization() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+        {error}
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-lg p-6 shadow-md">
-      <div className="flex items-center gap-3 mb-6">
-        <Brain className="h-6 w-6 text-indigo-600" />
-        <h2 className="text-xl font-semibold">AI Resource Prioritization</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-4 bg-indigo-50 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="h-5 w-5 text-indigo-600" />
-            <h3 className="font-medium">Urgency Score</h3>
-          </div>
-          <p className="text-2xl font-bold text-indigo-600">
-            {(metrics?.urgencyScore ?? 0 * 100).toFixed(1)}%
-          </p>
-          <p className="text-sm text-gray-600 mt-1">
-            Based on critical factors
-          </p>
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg p-6 shadow-md">
+        <div className="flex items-center gap-3 mb-6">
+          <Brain className="h-6 w-6 text-indigo-600" />
+          <h2 className="text-xl font-semibold">AI Resource Prioritization</h2>
         </div>
 
-        <div className="p-4 bg-green-50 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="h-5 w-5 text-green-600" />
-            <h3 className="font-medium">Predicted Need</h3>
-          </div>
-          <p className="text-2xl font-bold text-green-600">
-            {(metrics?.predictedNeed ?? 0 * 100).toFixed(1)}%
-          </p>
-          <p className="text-sm text-gray-600 mt-1">
-            Future resource requirement
-          </p>
-        </div>
+        <div className="space-y-6">
+          {analyzedRequests.map((request) => (
+            <div 
+              key={request.requestId} 
+              className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="font-medium text-lg">{request.schoolName}</h3>
+                  <p className="text-sm text-gray-600">ID: {request.schoolId}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`px-3 py-1 rounded-full text-sm ${
+                    request.requestDetails.priority === 'critical' 
+                      ? 'bg-red-100 text-red-800'
+                      : request.requestDetails.priority === 'high'
+                      ? 'bg-orange-100 text-orange-800'
+                      : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    {request.requestDetails.priority}
+                  </span>
+                </div>
+              </div>
 
-        <div className="p-4 bg-purple-50 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <Brain className="h-5 w-5 text-purple-600" />
-            <h3 className="font-medium">Context Score</h3>
-          </div>
-          <p className="text-2xl font-bold text-purple-600">
-            {(metrics?.contextScore ?? 0 * 100).toFixed(1)}%
-          </p>
-          <p className="text-sm text-gray-600 mt-1">Local context analysis</p>
-        </div>
-      </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="p-4 bg-indigo-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="h-5 w-5 text-indigo-600" />
+                    <h4 className="font-medium">Urgency Score</h4>
+                  </div>
+                  <p className="text-2xl font-bold text-indigo-600">
+                    {(request.analysis.urgencyScore * 100).toFixed(1)}%
+                  </p>
+                </div>
 
-      <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
-        <h3 className="font-medium text-yellow-800 mb-2">AI Recommendations</h3>
-        <ul className="space-y-2 text-sm text-yellow-700">
-          <li className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4" />
-            Prioritize infrastructure development based on urgency score
-          </li>
-          <li className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
-            Prepare for increased resource needs in the next quarter
-          </li>
-          <li className="flex items-center gap-2">
-            <Brain className="h-4 w-4" />
-            Consider local socio-economic factors in allocation
-          </li>
-        </ul>
+                <div className="p-4 bg-green-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <h4 className="font-medium">Predicted Need</h4>
+                  </div>
+                  <p className="text-2xl font-bold text-green-600">
+                    {(request.analysis.predictedNeed * 100).toFixed(1)}%
+                  </p>
+                </div>
+
+                <div className="p-4 bg-purple-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Brain className="h-5 w-5 text-purple-600" />
+                    <h4 className="font-medium">Context Score</h4>
+                  </div>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {(request.analysis.contextScore * 100).toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+                <div>
+                  <span className="font-medium">Resource Type:</span>{' '}
+                  {request.requestDetails.type}
+                </div>
+                <div>
+                  <span className="font-medium">Quantity:</span>{' '}
+                  {request.requestDetails.quantity}
+                </div>
+                <div>
+                  <span className="font-medium">Estimated Cost:</span>{' '}
+                  ₹{request.requestDetails.cost.toLocaleString()}
+                </div>
+                <div>
+                  <span className="font-medium">Average Score:</span>{' '}
+                  {(request.analysis.averageScore * 100).toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-medium mb-2 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  AI Recommendations
+                </h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  {request.analysis.recommendations.map((rec, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                      <span className="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xs">
+                        {index + 1}
+                      </span>
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

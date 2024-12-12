@@ -161,9 +161,26 @@ export function AnalysisForm() {
           </button>
 
           {currentStep === steps.length - 1 ? (
-            <></>
-          ) : (
             <button
+            type="submit"
+            // disabled={isAnalyzing}
+            onClick={submitfeature}
+            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isAnalyzing ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                Analyzing...
+              </>
+            ) : (
+              <>
+                Analyze School Structure
+                <ChevronRight className="h-5 w-5" />
+              </>
+            )}
+          </button>
+          ) : (
+            <><button
               type="button"
               onClick={() =>
                 setCurrentStep((prev) => Math.min(steps.length - 1, prev + 1))
@@ -172,27 +189,10 @@ export function AnalysisForm() {
             >
               Next
             </button>
+            </>
           )}
-        </div>
+        </div> 
       </form>
-      <button
-        type="submit"
-        // disabled={isAnalyzing}
-        onClick={submitfeature}
-        className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isAnalyzing ? (
-          <>
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            Analyzing...
-          </>
-        ) : (
-          <>
-            Analyze School Structure
-            <ChevronRight className="h-5 w-5" />
-          </>
-        )}
-      </button>
     </FormProvider>
   );
 }

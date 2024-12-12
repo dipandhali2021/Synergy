@@ -16,17 +16,16 @@ import { TaskList } from './tasks/TaskList';
 import { CollaboratorsList } from './collaboration/CollaboratorsList';
 import { ProgressOverview } from './progress/ProgressOverview';
 import { PlanSettings } from './settings/PlanSettings';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function TransitionPlanTemplate() {
+  const {user} = useAuth();
   const [activeTab, setActiveTab] = useState('timeline');
   const [showSettings, setShowSettings] = useState(false);
 
   const tabs = [
     { id: 'timeline', label: 'Timeline', icon: Calendar },
     { id: 'tasks', label: 'Tasks', icon: CheckCircle },
-    { id: 'collaborators', label: 'Team', icon: Users },
-    { id: 'recommendations', label: 'AI Insights', icon: FileText },
-    { id: 'progress', label: 'Progress', icon: Flag },
   ];
 
   return (
@@ -37,10 +36,10 @@ export function TransitionPlanTemplate() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Grade Restructuring Plan
+                Transition Plan
               </h1>
               <p className="text-gray-600 mt-1">
-                Government High School, Thiruvananthapuram
+                UDISE Code : {user?.schoolId}
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -50,15 +49,15 @@ export function TransitionPlanTemplate() {
               >
                 <Settings className="h-5 w-5" />
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+              {/* <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                 <Plus className="h-4 w-4" />
                 <span>New Task</span>
-              </button>
+              </button> */}
             </div>
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-4 gap-4 mt-6">
+          {/* <div className="grid grid-cols-4 gap-4 mt-6">
             <div className="bg-indigo-50 rounded-lg p-4">
               <div className="flex items-center gap-3">
                 <Clock className="h-5 w-5 text-indigo-600" />
@@ -95,7 +94,7 @@ export function TransitionPlanTemplate() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Navigation Tabs */}

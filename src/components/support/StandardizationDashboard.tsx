@@ -31,20 +31,6 @@ export function StandardizationDashboard() {
       color: 'bg-purple-50 text-purple-600'
     },
     {
-      title: 'Progress Dashboard',
-      description: 'Track your standardization journey',
-      icon: BarChart2,
-      link: '/standardization/progress',
-      color: 'bg-yellow-50 text-yellow-600'
-    },
-    {
-      title: 'Community Support',
-      description: 'Connect with peers and experts',
-      icon: Users,
-      link: '/standardization/community',
-      color: 'bg-pink-50 text-pink-600'
-    },
-    {
       title: 'Resources',
       description: 'Download templates and guides',
       icon: Download,
@@ -63,7 +49,6 @@ export function StandardizationDashboard() {
         ))}
       </div>
 
-      <ProgressOverview />
     </div>
   );
 }

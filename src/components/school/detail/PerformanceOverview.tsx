@@ -26,10 +26,10 @@ interface PerformanceOverviewProps {
 export function PerformanceOverview({ school }: PerformanceOverviewProps) {
   const performanceOverview = school.performanceOverview;
   const performanceData = [
-    { metric: 'Academic Achievement', value: performanceOverview.academicAchievement },
-    { metric: 'Teacher-Student Ratio', value: performanceOverview.teacherStudentRatio },
-    { metric: 'Infrastructure', value: performanceOverview.infrastructure },
-    { metric: 'Resource Availability', value: performanceOverview.resourceAvailability },
+    { metric: 'Academic Achievement', value: 23 },
+    { metric: 'Teacher-Student Ratio', value: 34 },
+    { metric: 'Infrastructure', value: 24 },
+    { metric: 'Resource Availability', value: 34 },
   ];
 
   const trendData = school.performanceTrends.map((item) => ({

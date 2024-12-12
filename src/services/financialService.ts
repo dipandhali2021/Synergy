@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api/resource-plan';
+const API_BASE_URL = 'http://localhost:5000/api/resource-plans';
 
 export interface BudgetOverview {
   total_budget: number;

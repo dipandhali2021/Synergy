@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GuidesList } from './guides/GuidesList';
+import { GuidesList } from './guides/GuideList';
 import { TrainingList } from './training/TrainingList';
 import { BestPracticesList } from './practices/BestPracticesList';
 import { ToolsList } from './tools/ToolsList';

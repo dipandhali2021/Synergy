@@ -498,7 +498,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { ReportsView } from '../reports/ReportsView';
 
 export function RoleSpecificDashboard() {
-  const { user } = useAuth();
   const [currentView, setCurrentView] = useState('DASHBOARD');
   const [dashboardData, setDashboardData] = useState({
     pendingRequests: 0,
@@ -520,12 +519,17 @@ export function RoleSpecificDashboard() {
   });
 
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  console.log(user);
+
+  // Fetch Dashboard Data
+
 
   const fetchDashboardData = async () => {
     try {
       const response = await axios.post(
         'http://localhost:5000/api/resource-plans/school-dashboard/',
-        { schoolUdiseCode: '32131200206' }
+        { schoolUdiseCode: user?.schoolId }
       );
       setDashboardData(response.data);
     } catch (error) {
@@ -549,14 +553,15 @@ export function RoleSpecificDashboard() {
     e.preventDefault();
     setLoading(true);
 
-    const handleSubmitNewRequest = async (newPlanData) => {
-      try {
-        await axios.post('http://localhost:5000/api/resource-plans/create', newPlanData);
-        fetchPlans(); // Fetch updated plans
-      } catch (error) {
-        console.error("Error submitting new request:", error);
-      }
-    };
+    // const handleSubmitNewRequest = async (newPlanData) => {
+    //   try {
+    //     await axios.post('http://localhost:4000/api/v1/resource/create', newPlanData);
+    //     fetchPlans(); // Fetch updated plans
+    //   } catch (error) {
+    //     console.error("Error submitting new request:", error);
+    //   }
+    // };
+    console.log(formData);
     try {
       const response = await fetch(
         'http://localhost:5000/api/resource-plans/insert-resource-request/',
@@ -614,6 +619,7 @@ export function RoleSpecificDashboard() {
               type="text"
               name="schoolUdiseCode"
               value={formData.schoolUdiseCode}
+              placeholder={user?.schoolId}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded-lg"
@@ -689,7 +695,6 @@ export function RoleSpecificDashboard() {
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
-              <option value="critical">Critical</option>
             </select>
           </div>
           <button
@@ -720,7 +725,7 @@ export function RoleSpecificDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="font-semibold mb-4">Resource Status</h3>
           <div className="space-y-4">
@@ -751,7 +756,7 @@ export function RoleSpecificDashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        {/* <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="font-semibold mb-4">Resource Utilization</h3>
           <div className="space-y-3">
             {Object.entries(utilization).map(
@@ -771,7 +776,7 @@ export function RoleSpecificDashboard() {
               )
             )}
           </div>
-        </div>
+        </div> */}
 
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="font-semibold mb-4">Quick Actions</h3>

@@ -37,9 +37,9 @@ export function Header() {
             <Link to="/schools" className={isActive('/schools')}>
               {t('nav.schools')}
             </Link>
-            <Link to="/analysis" className={isActive('/analysis')}>
+            {/* <Link to="/analysis" className={isActive('/analysis')}>
               {t('nav.analysis')}
-            </Link>
+            </Link> */}
             <Link
               to="/standardization"
               className={isActive('/standardization')}
@@ -67,6 +67,7 @@ export function Header() {
 
             {user ? (
               <>
+                <Link to={'/profile'}>
                 <div className="flex items-center gap-2">
                   <UserIcon className="h-5 w-5" />
                   <span className="text-sm">{user.name}</span>
@@ -74,6 +75,7 @@ export function Header() {
                     {user.role.replace('_', ' ')}
                   </span>
                 </div>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-1 text-indigo-200 hover:text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-lg"

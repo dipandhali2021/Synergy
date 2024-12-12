@@ -23,6 +23,10 @@ import challengesRoutes from './routes/challengesRoutes.js';
 import reportRoutes from './routes/reportsRoutes.js';
 import chatBotRoutes from './routes/chatBotRoutes.js';
 import resourcePlanRoutes from './routes/resourcePlanRoutes.js';
+import standardRoutes from './routes/standardRoutes.js';
+import guideRoutes from './routes/guideRoutes.js';
+import trainingRoutes from './routes/trainingRoutes.js';
+import testRoutes from './routes/testRoutes.js';
 
 dotenv.config();
 
@@ -59,7 +63,10 @@ app.use('/api/schools', schoolRoutes);
 app.use('/api/school/details', schooldetailRoutes);
 app.use('/api/chatbot', chatBotRoutes);
 app.use('/api/resource-plans', resourcePlanRoutes);
-
+app.use('/api/standardization', standardRoutes);
+app.use('/api/guides', guideRoutes);
+app.use('/api/training', trainingRoutes);
+app.use('/api/test',testRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

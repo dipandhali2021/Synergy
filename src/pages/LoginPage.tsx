@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LoginForm } from '../components/auth/LoginForm';
 import { LoginCredentials } from '../types/auth';
 import { School } from 'lucide-react';
-import { authService } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
 
 export function LoginPage() {
@@ -16,8 +15,21 @@ export function LoginPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await authService.login(data);
-      login(response.token);
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Login failed');
+      }
+
+      login(result.token);
       navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

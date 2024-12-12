@@ -7,7 +7,7 @@ const communityFeedbackSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['improvement', 'concern'],
+    enum: ['improvement', 'issue'],
     required: true
   },
   message: {

@@ -50,7 +50,7 @@ export const updateSchool = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const school = await School.findById(req.params.id);
+    const school = await School.findOne({schoolUDISECode: req.params.id});
     if (!school) {
       return res.status(404).json({ message: 'School not found' });
     }

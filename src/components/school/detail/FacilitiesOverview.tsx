@@ -22,61 +22,61 @@ export function FacilitiesOverview({ school }: FacilitiesOverviewProps) {
     { 
       name: 'Library', 
       icon: Library, 
-      available: school.availableFacilities?.library 
+      available: school.availableFacilities[0]?.library 
     },
     { 
       name: 'Computer Lab', 
       icon: Monitor, 
-      available: school.availableFacilities?.computerLab 
+      available: school.availableFacilities[0]?.computerLab 
     },
     { 
       name: 'Drinking Water', 
       icon: Droplets, 
-      available: school.availableFacilities?.drinkingWater 
+      available: school.availableFacilities[0]?.drinkingWater 
     },
     { 
       name: 'Electricity', 
       icon: Zap, 
-      available: school.availableFacilities?.electricity 
+      available: school.availableFacilities[0]?.electricity 
     },
     { 
       name: 'Internet', 
       icon: Wifi, 
-      available: school.availableFacilities?.internet 
+      available: school.availableFacilities[0]?.internet 
     },
     { 
       name: 'Science Lab', 
       icon: Activity, 
-      available: school.availableFacilities?.scienceLab 
+      available: school.availableFacilities[0]?.scienceLab 
     },
     { 
       name: 'Smart Classroom', 
       icon: Monitor, 
-      available: school.availableFacilities?.smartClassroom 
+      available: school.availableFacilities[0]?.smartClassroom 
     },
     { 
       name: 'Playground', 
       icon: Activity, 
-      available: school.availableFacilities?.playground 
+      available: school.availableFacilities[0]?.playground 
     },
     { 
       name: 'Auditorium', 
       icon: Building, 
-      available: school.availableFacilities?.auditorium 
+      available: school.availableFacilities[0]?.auditorium 
     },
     { 
       name: 'Digital Library', 
       icon: BookOpen, 
-      available: school.availableFacilities?.digitalLibrary 
+      available: school.availableFacilities[0]?.digitalLibrary 
     },
   ];
 
   const digitalEquipment = [
-    { name: 'Desktops', count: school.digitalEquipment?.desktops || 0 },
-    { name: 'Laptops', count: school.digitalEquipment?.laptops || 0 },
-    { name: 'Projectors', count: school.digitalEquipment?.projectors || 0 },
-    { name: 'Smart Boards', count: school.digitalEquipment?.smartBoards || 0 },
-    { name: 'Printers', count: school.digitalEquipment?.printers || 0 },
+    { name: 'Desktops', count: school.digitalEquipment[0]?.desktops || 0 },
+    { name: 'Laptops', count: school.digitalEquipment[0]?.laptops || 0 },
+    { name: 'Projectors', count: school.digitalEquipment[0]?.projectors || 0 },
+    { name: 'Smart Boards', count: school.digitalEquipment[0]?.smartBoards || 0 },
+    { name: 'Printers', count: school.digitalEquipment[0]?.printers || 0 },
   ];
 
   return (

@@ -21,7 +21,7 @@ export function NewDiscussionForm({ onSubmit, onCancel }: NewDiscussionFormProps
   const [tags, setTags] = React.useState<string[]>([]);
   const [tagInput, setTagInput] = React.useState('');
 
-  const { register, handleSubmit, formState: { errors } } = useForm<NewDiscussion>({
+  const { register, handleSubmit,setValue, formState: { errors } } = useForm<NewDiscussion>({
     resolver: zodResolver(discussionSchema),
     defaultValues: {
       tags: []
@@ -31,6 +31,7 @@ export function NewDiscussionForm({ onSubmit, onCancel }: NewDiscussionFormProps
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
       setTags([...tags, tagInput.trim()]);
+      setValue('tags', [...tags, tagInput.trim()]);
       setTagInput('');
     }
   };

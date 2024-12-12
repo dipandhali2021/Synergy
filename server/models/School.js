@@ -123,6 +123,9 @@ const schoolSchema = new mongoose.Schema(
         required: true,
       },
     },
+    schoolUDISECode:{
+      type: String,
+    },
     lastUpdated: {
       type: Date,
       default: Date.now,

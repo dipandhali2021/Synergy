@@ -15,12 +15,11 @@ interface ProgressTabsProps {
 
 export function ProgressTabs({ activeTab, onTabChange }: ProgressTabsProps) {
   const tabs = [
-    { id: 'national', label: 'National Overview', icon: Globe2 },
     { id: 'regional', label: 'Regional Progress', icon: Map },
     { id: 'school', label: 'School Progress', icon: School },
-    { id: 'comparative', label: 'Comparative Analysis', icon: BarChart2 },
     { id: 'challenges', label: 'Challenges', icon: AlertTriangle },
     { id: 'reports', label: 'Reports', icon: FileText },
+    // { id: 'national', label: 'National Overview', icon: Globe2 },
   ];
 
   return (

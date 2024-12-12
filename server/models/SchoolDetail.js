@@ -74,12 +74,12 @@ const SchoolDetailSchema = new mongoose.Schema({
   grant: {type: Boolean},
   latitude: { type: Number },
   longitude: { type: Number },
-  classroomCondition: {
+  classroomCondition: [{
     goodCondition: { type: Number },
     minorRepair: { type: Number },
     majorRepair: { type: Number }
-  },
-  availableFacilities: {
+  }],
+  availableFacilities: [{
     library: { type: Boolean },
     computerLab: { type: Boolean },
     drinkingWater: { type: Boolean },
@@ -90,31 +90,31 @@ const SchoolDetailSchema = new mongoose.Schema({
     playground: { type: Boolean },
     auditorium: { type: Boolean },
     digitalLibrary: { type: Boolean }
-  },
-  resourceDistribution: {
+  }],
+  resourceDistribution: [{
     teachingStaff: { current: Number, required: Number },
     classrooms: { current: Number, required: Number },
     labs: { current: Number, required: Number }
-  },
-  digitalEquipment: {
+  }],
+  digitalEquipment: [{
     desktops: { type: Number },
     laptops: { type: Number },
     projectors: { type: Number },
     smartBoards: { type: Number },
     printers: { type: Number }
-  },
-  studentDemographics: {
+  }],
+  studentDemographics: [{
     general: { type: Number },
     SC: { type: Number },
     ST: { type: Number },
     OBC: { type: Number }
-  },
-  teacherQualifications: {
+  }],
+  teacherQualifications: [{
     PhD: { type: Number },
     postGraduate: { type: Number },
     graduate: { type: Number },
     other: { type: Number }
-  },
+  }],
   performanceOverview: {
     academicAchievement: { type: Number },
     teacherStudentRatio: { type: Number },

@@ -112,7 +112,7 @@ export function SchoolCard({ school, onViewDetails }: SchoolCardProps) {
             className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
           >
             <Link
-              to={`/school/detail/${school.schoolId}`}
+              to={`/school/detail/${school.schoolUDISECode}`}
               className="flex items-center gap-2"
             >
               <Eye className="h-4 w-4" />

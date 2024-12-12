@@ -75,6 +75,7 @@ export const schoolService = {
           qualityScore: school.qualityScore,
           history: school.history,
           schoolId: school.schoolId,
+          schoolUDISECode: school.schoolUDISECode,
         })),
         total: response.data.length
       };

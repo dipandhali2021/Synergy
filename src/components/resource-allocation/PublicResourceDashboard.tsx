@@ -116,7 +116,7 @@ export function PublicResourceDashboard() {
     const fetchDistributionData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/school/school-distribution/"
+          "http://localhost:5000/api/resource-plans/getdistribution"
         );
         if (response.data.success) {
           setDistributionData(response.data.distributionData);

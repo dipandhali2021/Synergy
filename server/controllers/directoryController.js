@@ -68,7 +68,7 @@ export const requestConnection = async (req, res) => {
 
     stakeholder.connections.push({
       user: req.user.id,
-      status: 'pending'
+      status: 'in-progress'
     });
 
     await stakeholder.save();

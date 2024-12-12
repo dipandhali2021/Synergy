@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addBudget, addFundingSource, addResourceAllocation, approveResourceRequest, dashboardService, findResourceMatches, getAllResourceRequests, getAvailableResources, initiateResourceMatch, modifyResourceRequest, rejectResourceRequest, requestSharedResource, respondToResourceMatch, shareResource } from "../controllers/resourceallocation.controllers.js";
+import { addBudget, addFundingSource, addResourceAllocation, analyzeResourceRequests, approveResourceRequest, dashboardService, findResourceMatches, getAllResourceRequests, getAvailableResources, getschooldistribution, initiateResourceMatch, modifyResourceRequest, rejectResourceRequest, requestSharedResource, resourcemap, respondToResourceMatch, shareResource } from "../controllers/resourceallocation.controllers.js";
 import { getBudgetOverview,getAllocationUtilization,getFundingSources } from "../controllers/resourceallocation.controllers.js";
 import { getAllFeedback, submitFeedback, updateFeedbackStatus } from "../controllers/feedbackController.js";
 const router = Router();
@@ -43,6 +43,9 @@ router.get('/available', getAvailableResources);
 router.post('/request-shared', requestSharedResource);
 
 
+router.get('/resourcemap',resourcemap);
+router.get('/getdistribution',getschooldistribution);
+router.get('/analyze',analyzeResourceRequests);
 
 
 

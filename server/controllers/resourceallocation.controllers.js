@@ -8,6 +8,7 @@ import ResourceAllocation from '../models/resource-allocation/ResourceAllocation
 import fundingSource from '../models/resource-allocation/fundingSource.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import SchoolDetail from '../models/SchoolDetail.js';
+import School from "../models/School.js";
 
 export const dashboardService = {
   // School Admin Dashboard
@@ -177,7 +178,7 @@ export const getAllocationUtilization = async (req, res) => {
 
     // const allocations = await ResourceAllocation.find({ fiscal_year: currentFiscalYear });
     const allocations = await ResourceAllocation.find();
-
+    console.log(allocations);
     const categoryTotals = allocations.reduce((acc, allocation) => {
       const { category, allocated_amount, utilized_amount } = allocation;
 
@@ -205,14 +206,28 @@ export const getAllocationUtilization = async (req, res) => {
 
 export const getFundingSources = async (req, res) => {
   try {
-    const currentFiscalYear = '2024-25';
+    // const currentFiscalYear = '2024-25';
     const sources = await fundingSource.find({
-      fiscal_year: currentFiscalYear,
+      // fiscal_year: currentFiscalYear,
     });
+
+    const totalAmount = await fundingSource.aggregate([
+      {
+        $group: {
+          _id: null,                // Grouping all documents together (no specific grouping key)
+          totalAmount: { $sum: "$value" } // Summing the "amount" field
+        }
+      }
+    ]);
+
+    
+
 
     const formattedData = sources.map((source) => ({
       name: source.name,
-      value: source.percentage,
+      // value: source.percentage,
+      value: source.value,
+      total_amount: totalAmount[0]?.totalAmount
     }));
 
     return res.status(200).json(formattedData);
@@ -267,21 +282,21 @@ export const addBudget = async (req, res) => {
 export const addFundingSource = async (req, res) => {
   try {
     // Destructure input fields from the request body
-    const { name, percentage, amount, fiscal_year } = req.body;
+    const { name, percentage, value, fiscal_year } = req.body;
 
     // Validate input
-    if (!name || !percentage || !amount || !fiscal_year) {
-      return res.status(400).json({
-        message:
-          'All fields (name, percentage, amount, fiscal_year) are required.',
-      });
-    }
+    // if (!name || !percentage || !amount || !fiscal_year) {
+    //   return res.status(400).json({
+    //     message:
+    //       'All fields (name, percentage, amount, fiscal_year) are required.',
+    //   });
+    // }
 
     // Create a new FundingSource instance
     const newFundingSource = new fundingSource({
       name,
       percentage,
-      amount,
+      value,
       fiscal_year,
       created_at: new Date(),
       updated_at: new Date(),
@@ -758,7 +773,7 @@ export const shareResource = async (req, res) => {
 
     // Validate school has the resources they're trying to share
     for (const resource of resources) {
-      const facilityExists = school.availableFacilities[resource.resourceType];
+      const facilityExists = school.availableFacilities[0][resource.resourceType];
       if (!facilityExists) {
         return res.status(400).json({
           message: `School does not have the facility: ${resource.resourceType}`
@@ -919,6 +934,256 @@ export const requestSharedResource = async (req, res) => {
     console.error('Error requesting shared resource:', error);
     res.status(500).json({ 
       message: 'Internal server error while requesting shared resource',
+      error: error.message 
+    });
+  }
+};
+
+export const resourcemap = async(req,res) => {
+  try {
+    // Fetch all distinct UDISE codes with one resource request each
+    // const resourceRequests = await ResourceRequest.aggregate([
+    //   {
+    //     $group: {
+    //       _id: '$schoolUdiseCode',
+    //       request: { $first: '$$ROOT' },
+    //     },
+    //   },
+    // ]);
+
+    const resourceRequestsMap = new Map();
+
+    const allRequests = await ResourceRequest.find();
+    allRequests.forEach((request) => {
+      if (!resourceRequestsMap.has(request.schoolUdiseCode.toString())) {
+        resourceRequestsMap.set(request.schoolUdiseCode.toString(), request);
+      }
+    });
+
+    const resourceRequests = Array.from(resourceRequestsMap.values());
+    
+    
+
+
+    console.log(resourceRequests);
+    // Extract UDISE codes
+    const udiseCodes = resourceRequests.map((req) => req.schoolUdiseCode);
+    console.log('udiseCode',udiseCodes);
+    // Find schools matching the UDISE codes
+    // const schoolsds = await School.find();
+    // console.log(schoolsds);
+    const schools = await School.find({ 'schoolUDISECode': { $in: udiseCodes } });
+    console.log('schools',schools);
+    // Join the resource requests with schools and cards
+    const locations = [];
+    // console.log(udiseCodes);
+    // console.log(schools);
+    for (const resource of resourceRequests) {
+      const school = schools.find(
+        (s) => s.schoolUDISECode.toString() === resource.schoolUdiseCode.toString()
+      );
+      console.log(school);
+      console.log(resource);
+      if (!school) continue;
+      
+
+      // Fetch card details
+      // const card = await Card.findOne({ schoolId: school.schoolId });
+      // if (!card) continue;
+      
+      locations.push({
+        id: resource._id,
+        lat: school.coordinates.lat,
+        lng: school.coordinates.lng,
+        schoolName: school.name,
+        resourceType: resource.requestType,
+        status: resource.status,
+        quantity: resource.quantity,
+        lastUpdated: resource.updatedAt,
+        estimatedDelivery: "12-04-2024",
+      });
+    }
+
+    res.status(200).json(locations);
+  } catch (error) {
+    console.error('Error fetching resource allocations:', error);
+    res.status(500).json({ error: 'An error occurred while fetching resource allocations' });
+  }
+}
+
+export const getschooldistribution = async (req, res) => {
+  try {
+    // Validate the _id if any query involves it (not shown in this example)
+    
+    // Fetch the total count for all schools
+    const totalSchools = await SchoolDetail.countDocuments();
+    console.log(totalSchools);
+
+    // Fetch counts for each category
+    const urbanCount = await SchoolDetail.countDocuments({ ruralUrban: "2-Urban" });
+    const ruralCount = await SchoolDetail.countDocuments({ ruralUrban: "1-Rural" });
+    const remoteCount = await SchoolDetail.countDocuments({ ruralUrban: "3-Remote" });
+
+    if (totalSchools === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No schools found in the database",
+        totalSchools: 0,
+        distributionData: [],
+      });
+    }
+
+    // Calculate percentages and format the response
+    const distributionData = [
+      { name: 'Urban Schools', value: Math.round((urbanCount / totalSchools) * 100) },
+      { name: 'Rural Schools', value: Math.round((ruralCount / totalSchools) * 100) },
+      { name: 'Remote Areas', value: Math.round((remoteCount / totalSchools) * 100) },
+    ];
+
+    // Send the JSON response
+    return res.json({
+      success: true,
+      totalSchools: totalSchools,
+      distributionData: distributionData,
+    });
+  } catch (error) {
+    console.error("Error fetching school distribution data:", error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message,
+    });
+  }
+};
+
+
+export const analyzeResourceRequests = async (req, res) => {
+  try {
+    const client = new GoogleGenerativeAI(
+      'AIzaSyAUuOBsFY8zA_9fufowCUqQLxxYxPMdHeQ'
+    );
+
+    const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+    // Get all resource requests
+    const requests = await ResourceRequest.find();
+    const analyzedRequests = [];
+
+    for (const request of requests) {
+      // Get school details for each request
+      const schoolDetails = await SchoolDetail.findOne({ 
+        schoolID: request.schoolUdiseCode 
+      });
+
+      if (!schoolDetails) continue;
+
+      // Prepare data for Gemini analysis
+      const analysisData = {
+        request: {
+          type: request.requestType,
+          quantity: request.quantity,
+          cost: request.estimatedcost,
+          priority: request.priority
+        },
+        school: {
+          totalStudents: schoolDetails.totalStudents,
+          totalTeachers: schoolDetails.totalTeachers,
+          facilities: schoolDetails.availableFacilities,
+          infrastructure: schoolDetails.infrastructureQuality,
+          location: {
+            state: schoolDetails.state,
+            district: schoolDetails.district,
+            ruralUrban: schoolDetails.ruralUrban
+          },
+          performance: {
+            qualityScore: schoolDetails.qualityScore,
+            resourceUtilization: schoolDetails.resourceUtilizationEfficiency
+          }
+        }
+      };
+
+      const prompt = `
+        Analyze this resource request and school data:
+        ${JSON.stringify(analysisData, null, 2)}
+
+        Provide a JSON response with:
+        {
+          "urgencyScore": (number between 0-1),
+          "predictedNeed": (number between 0-1),
+          "contextScore": (number between 0-1),
+          "recommendations": ["string1", "string2"]
+        }
+
+        Consider:
+        - Current resource utilization
+        - School performance and needs
+        - Local context and demographics
+        - Cost-benefit analysis
+      `;
+
+
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
+      let cleanedResponse = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/^[^[{]*/, '')
+        .replace(/[^}\]]*$/, '')
+        .trim();
+  
+      if (!cleanedResponse.startsWith('{') || !cleanedResponse.endsWith('}')) {
+        throw new Error('Invalid JSON array structure');
+      }
+      const analysisResult = JSON.parse(cleanedResponse);
+
+      console.log(analysisResult)
+
+      // Calculate average score
+      const averageScore = (
+        analysisResult.urgencyScore + 
+        analysisResult.predictedNeed + 
+        analysisResult.contextScore
+      ) / 3;
+
+      // Update request with AI analysis
+      await ResourceRequest.findByIdAndUpdate(request._id, {
+        aiAnalysis: {
+          ...analysisResult,
+          averageScore,
+          lastAnalyzed: new Date()
+        }
+      });
+
+      analyzedRequests.push({
+        requestId: request._id,
+        schoolId: request.schoolUdiseCode,
+        schoolName: schoolDetails.schoolName,
+        requestDetails: {
+          type: request.requestType,
+          quantity: request.quantity,
+          cost: request.estimatedcost,
+          priority: request.priority
+        },
+        analysis: {
+          ...analysisResult,
+          averageScore
+        }
+      });
+    }
+
+    // Sort by average score
+    analyzedRequests.sort((a, b) => 
+      b.analysis.averageScore - a.analysis.averageScore
+    );
+
+    res.json(analyzedRequests);
+  } catch (error) {
+    console.error('Error analyzing resource requests:', error);
+    res.status(500).json({ 
+      message: 'Error analyzing resource requests',
       error: error.message 
     });
   }

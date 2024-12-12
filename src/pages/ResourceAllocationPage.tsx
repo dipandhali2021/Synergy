@@ -90,12 +90,12 @@ const navigationItems: NavItem[] = [
     icon: TrendingUp,
     category: 'analytics',
   },
-  {
-    id: 'metrics',
-    label: 'Performance Metrics',
-    icon: BarChart2,
-    category: 'analytics',
-  },
+  // {
+  //   id: 'metrics',
+  //   label: 'Performance Metrics',
+  //   icon: BarChart2,
+  //   category: 'analytics',
+  // },
   {
     id: 'matching',
     label: 'Resource Matching',
@@ -108,31 +108,31 @@ const navigationItems: NavItem[] = [
     icon: Users,
     category: 'management',
   },
-  {
-    id: 'training',
-    label: 'Training Center',
-    icon: BookOpen,
-    category: 'management',
-  },
-  {
-    id: 'incentives',
-    label: 'Incentives',
-    icon: Trophy,
-    category: 'management',
-  },
+  // {
+  //   id: 'training',
+  //   label: 'Training Center',
+  //   icon: BookOpen,
+  //   category: 'management',
+  // },
+  // {
+  //   id: 'incentives',
+  //   label: 'Incentives',
+  //   icon: Trophy,
+  //   category: 'management',
+  // },
   {
     id: 'emergency',
     label: 'Emergency Center',
     icon: AlertTriangle,
     category: 'monitoring',
   },
-  { id: 'iot', label: 'IoT Monitoring', icon: Wifi, category: 'monitoring' },
-  {
-    id: 'feedback',
-    label: 'Feedback System',
-    icon: MessageSquare,
-    category: 'monitoring',
-  },
+  // { id: 'iot', label: 'IoT Monitoring', icon: Wifi, category: 'monitoring' },
+  // {
+  //   id: 'feedback',
+  //   label: 'Feedback System',
+  //   icon: MessageSquare,
+  //   category: 'monitoring',
+  // },
   {
     id: 'transparency',
     label: 'Financial Overview',
@@ -278,7 +278,7 @@ export function ResourceAllocationPage() {
         {/* Main Content */}
         <div className="flex-1 p-8">
           <div className="mb-8">
-            <ResourceMetricsCard metrics={metrics} />
+            {/* <ResourceMetricsCard metrics={metrics} /> */}
           </div>
 
           <div className="bg-white rounded-lg shadow-md">

@@ -19,6 +19,7 @@ import { BestPracticesList } from './components/support/practices/BestPracticesL
 import { ResourceAllocationPage } from './pages/ResourceAllocationPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SchoolDetailPage } from './pages/SchoolDetailPage';
+import { RegistrationPendingPage } from './pages/RegistrationPending';
 
 export default function App() {
   return (
@@ -32,7 +33,7 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route path="/analysis" element={<AnalysisPage />} />
+                {/* <Route path="/analysis" element={<AnalysisPage />} /> */}
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/report" element={<AIAnalysisResult />} />
                 <Route
@@ -58,9 +59,11 @@ export default function App() {
                 />
 
                 <Route path="/progress" element={<ProgressPage />} />
-                <Route path="/engagement" element={<EngagementPage />} />
+                {/* <Route path="/engagement" element={<EngagementPage />} /> */}
                 <Route path="/schools" element={<KnowYourSchoolPage />} />
                 <Route path="/school/detail/:id" element={<SchoolDetailPage />} />
+                <Route path="/registration-pending" element={<RegistrationPendingPage/>}/>
+                
               </Routes>
             </main>
           </div>

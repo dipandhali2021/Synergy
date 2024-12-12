@@ -46,7 +46,6 @@ export function SchoolDetailPage() {
     { id: 'overview', label: 'Overview', icon: Building2 },
     { id: 'facilities', label: 'Facilities & Infrastructure', icon: Building2 },
     { id: 'demographics', label: 'Students & Teachers', icon: Users },
-    { id: 'performance', label: 'Performance', icon: SchoolIcon },
     { id: 'compliance', label: 'Grants & Compliance', icon: Calendar },
     { id: 'checklist', label: 'Compliance Checklist', icon: ClipboardCheck },
     { id: 'management', label: 'Management & Governance', icon: Settings },
@@ -59,10 +58,10 @@ export function SchoolDetailPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
-              {school.logoUrl ? (
+              {school[0].logoUrl ? (
                 <img
-                  src={school.logoUrl}
-                  alt={`${school.name} logo`}
+                  src={school[0].logoUrl}
+                  alt={`${school[0].name} logo`}
                   className="h-8 w-8"
                 />
               ) : (
@@ -70,11 +69,11 @@ export function SchoolDetailPage() {
               )}
             </div>
             <div>
-              <h1 className="text-3xl font-bold">{school.schoolName}</h1>
+              <h1 className="text-3xl font-bold">{school[0].schoolName}</h1>
               <div className="flex items-center gap-2 mt-2 text-indigo-100">
                 <MapPin className="h-4 w-4" />
                 <span>
-                  {school.district}, {school.state}
+                  {school[0].district}, {school[0].state}
                 </span>
               </div>
             </div>
@@ -83,21 +82,21 @@ export function SchoolDetailPage() {
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">{school.totalStudents}</div>
+              <div className="text-2xl font-bold">{school[0].totalStudents}</div>
               <div className="text-sm text-indigo-100">Students</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">{school.totalTeachers}</div>
+              <div className="text-2xl font-bold">{school[0].totalTeachers}</div>
               <div className="text-sm text-indigo-100">Teachers</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <div className="text-2xl font-bold">
-              {school.availableFacilities ? Object.keys(school.availableFacilities).length : 0}
+              {school[0].availableFacilities ? Object.keys(school[0].availableFacilities).length : 0}
               </div>
               <div className="text-sm text-indigo-100">Facilities</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold">{school.qualityScore.toFixed(2)}</div>
+              <div className="text-2xl font-bold">{school[0].qualityScore.toFixed(2)}</div>
               <div className="text-sm text-indigo-100">Quality Score</div>
             </div>
           </div>
@@ -146,32 +145,32 @@ export function SchoolDetailPage() {
         <div className="grid gap-8">
           {activeTab === 'overview' && (
             <>
-              <BasicInfo school={school} />
+              <BasicInfo school={school[0]} />
               <PerformanceOverview school={school} />
-              <InfrastructureOverview school={school} />
+              {/* <InfrastructureOverview school={school[0]} /> */}
             </>
           )}
 
           {activeTab === 'facilities' && (
             <>
-              <InfrastructureOverview school={school} />
-              <FacilitiesOverview school={school} />
+              {/* <InfrastructureOverview school={school[0]} /> */}
+              <FacilitiesOverview school={school[0]} />
             </>
           )}
 
           {activeTab === 'demographics' && (
-            <StudentTeacherData school={school} />
+            <StudentTeacherData school={school[0]} />
           )}
 
           {activeTab === 'performance' && (
             <PerformanceOverview school={school} />
           )}
 
-          {activeTab === 'compliance' && <GrantsCompliance school={school} />}
+          {activeTab === 'compliance' && <GrantsCompliance school={school[0]} />}
 
-          {activeTab === 'checklist' && <ComplianceChecklist school={school} />}
+          {activeTab === 'checklist' && <ComplianceChecklist school={school[0]} />}
 
-          {activeTab === 'management' && <ManagementInfo school={school} />}
+          {activeTab === 'management' && <ManagementInfo school={school[0]} />}
         </div>
       </main>
     </div>

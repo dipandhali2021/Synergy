@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { RegisterForm } from '../components/auth/RegisterForm';
 import { RegisterData } from '../types/auth';
 import { School } from 'lucide-react';
-import { authService } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
 
 export function RegisterPage() {
@@ -16,9 +15,28 @@ export function RegisterPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await authService.register(data);
-      login(response.token);
-      navigate('/');
+
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        body: data instanceof FormData ? data : JSON.stringify(data),
+        headers: data instanceof FormData ? undefined : {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+      const { token, user } = result;
+      const { approved, ...userDetails } = user;
+      if (!response.ok) {
+        throw new Error(result.message || 'Registration failed');
+      }
+      
+      if (!approved) {
+        navigate('/registration-pending');
+      } else {
+        login(result.token);
+        navigate('/');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

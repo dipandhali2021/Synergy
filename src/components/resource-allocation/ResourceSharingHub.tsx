@@ -135,11 +135,12 @@ export function ResourceSharingHub() {
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-2">Available Facilities:</h4>
                 <div className="space-y-1">
-                  {Object.entries(selectedSchool.availableFacilities)
+                    {Object.entries(selectedSchool.availableFacilities[0])
+                    .filter(([facility]) => facility !== '_id')
                     .filter(([, available]) => available)
                     .map(([facility]) => (
                       <div key={facility} className="text-sm text-gray-600">
-                        • {facility.replace(/([A-Z])/g, ' $1').trim()}
+                      • {facility.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
                     ))}
                 </div>
@@ -201,7 +202,10 @@ export function ResourceSharingHub() {
                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Select Resource</option>
-                    {Object.entries(selectedSchool.availableFacilities)
+                    {Object.entries(selectedSchool.availableFacilities[0])
+                    
+                    
+                      .filter(([facility]) => facility !== '_id')
                       .filter(([, available]) => available)
                       .map(([facility]) => (
                         <option key={facility} value={facility}>

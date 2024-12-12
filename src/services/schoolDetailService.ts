@@ -11,7 +11,7 @@ export const schoolDetailService = {
   async getSchoolDetails(schoolId: string) {
     try {
       const token = getAuthToken(); // Retrieve the token
-      const response = await axios.get(`${API_BASE_URL}/school/details/${schoolId}`, {
+      const response = await axios.get(`${API_BASE_URL}/school/details/search/${schoolId}`, {
         headers: {
           Authorization: `Bearer ${token}` // Add Authorization header
         }

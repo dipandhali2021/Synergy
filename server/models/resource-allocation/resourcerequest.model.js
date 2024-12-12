@@ -56,6 +56,14 @@ const ResourceRequestSchema = new mongoose.Schema({
     enum: ['low', 'medium', 'high', 'critical'],
     required: true 
   },
+  aiAnalysis: {
+    urgencyScore: { type: Number },
+    predictedNeed: { type: Number },
+    contextScore: { type: Number },
+    averageScore: { type: Number },
+    recommendations: [{ type: String }],
+    lastAnalyzed: { type: Date }
+  },
   resourceMatches: [ResourceMatchSchema],
   sharedResources: [SharedResourceSchema],
   createdAt: { type: Date, default: Date.now },

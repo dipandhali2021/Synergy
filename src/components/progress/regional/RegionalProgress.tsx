@@ -34,34 +34,34 @@ export function RegionalProgress() {
           className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
         >
           {[
-            'Andhra Pradesh',
-            'Arunachal Pradesh',
-            'Assam',
-            'Bihar',
-            'Chhattisgarh',
-            'Goa',
-            'Gujarat',
-            'Haryana',
-            'Himachal Pradesh',
-            'Jharkhand',
+            'ANDHRA PRADESH',
+            'ARUNACHAL PRADESH',
+            'ASSAM',
+            'BIHAR',
+            'CHHATTISGARH',
+            'GOA',
+            'GUJARAT',
+            'HARYANA',
+            'HIMACHAL PRADESH',
+            'JHARKHAND',
             'Karnataka',
-            'Kerala',
-            'Madhya Pradesh',
-            'Maharashtra',
-            'Manipur',
-            'Meghalaya',
-            'Mizoram',
-            'Nagaland',
-            'Odisha',
-            'Punjab',
-            'Rajasthan',
-            'Sikkim',
-            'Tamil Nadu',
-            'Telangana',
-            'Tripura',
-            'Uttar Pradesh',
-            'Uttarakhand',
-            'West Bengal',
+            'KERALA',
+            'MADHYA PRADESH',
+            'MAHARASHTRA',
+            'MANIPUR',
+            'MEGHALAYA',
+            'MIZORAM',
+            'NAGALAND',
+            'ODISHA',
+            'PUNJAB',
+            'RAJASTHAN',
+            'SIKKIM',
+            'TAMIL NADU',
+            'TELANGANA',
+            'TRIPURA',
+            'UTTAR PRADESH',
+            'UTTARAKHAND',
+            'WEST BENGAL',
           ].map((state) => (
             <option key={state} value={state}>
               {state}
@@ -73,9 +73,9 @@ export function RegionalProgress() {
       <RegionalMetrics metrics={metrics} />
 
       <StateComparisonChart
-          data={stateComparison}
-          onStateSelect={fetchStateComparison}
-        />
+        data={stateComparison}
+        onStateSelect={fetchStateComparison}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RegionalChallenges challenges={challenges} />
@@ -88,4 +88,3 @@ export function RegionalProgress() {
     </div>
   );
 }
-

@@ -8,6 +8,7 @@ export interface User {
   verified: boolean;
   approved: boolean;
   profileImage?: string;
+  schoolId?: string;
 }
 
 export interface AuthState {
@@ -27,4 +28,5 @@ export interface RegisterData {
   email: string;
   password: string;
   role: Role;
+  schoolId?: string;
 }

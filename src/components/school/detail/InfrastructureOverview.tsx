@@ -20,29 +20,31 @@ interface InfrastructureOverviewProps {
 }
 
 export function InfrastructureOverview({ school }: InfrastructureOverviewProps) {
-  console.log(school);
+  const schoolDetail = school;
+  console.log(schoolDetail.classroomCondition)
+
   const classroomConditionTotals =
-    school.classroomCondition.goodCondition +
-    school.classroomCondition.minorRepair +
-    school.classroomCondition.majorRepair;
+    schoolDetail.classroomCondition[0].goodCondition +
+    schoolDetail.classroomCondition[0].minorRepair +
+    schoolDetail.classroomCondition[0].majorRepair;
 
   const classroomConditionData = [
     {
       name: 'Good Condition',
       value:
-        (school.classroomCondition.goodCondition / classroomConditionTotals) *
+        (schoolDetail.classroomCondition[0].goodCondition / classroomConditionTotals) *
         100,
     },
     {
       name: 'Minor Repair',
       value:
-        (school.classroomCondition.minorRepair / classroomConditionTotals) *
+        (schoolDetail.classroomCondition[0].minorRepair / classroomConditionTotals) *
         100,
     },
     {
       name: 'Major Repair',
       value:
-        (school.classroomCondition.majorRepair / classroomConditionTotals) *
+        (schoolDetail.classroomCondition[0].majorRepair / classroomConditionTotals) *
         100,
     },
   ];
@@ -50,18 +52,18 @@ export function InfrastructureOverview({ school }: InfrastructureOverviewProps) 
   const resourceDistributionData = [
     {
       category: 'Teaching Staff',
-      current: school.resourceDistribution.teachingStaff.current,
-      required: school.resourceDistribution.teachingStaff.required,
+      current: schoolDetail.resourceDistribution[0].teachingStaff.current,
+      required: schoolDetail.resourceDistribution[0].teachingStaff.required,
     },
     {
       category: 'Classrooms',
-      current: school.resourceDistribution.classrooms.current,
-      required: school.resourceDistribution.classrooms.required,
+      current: schoolDetail.resourceDistribution[0].classrooms.current,
+      required: schoolDetail.resourceDistribution[0].classrooms.required,
     },
     {
       category: 'Labs',
-      current: school.resourceDistribution.labs.current,
-      required: school.resourceDistribution.labs.required,
+      current: schoolDetail.resourceDistribution[0].labs.current,
+      required: schoolDetail.resourceDistribution[0].labs.required,
     },
   ];
 

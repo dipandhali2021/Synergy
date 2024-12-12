@@ -1,67 +1,46 @@
 import express from 'express';
-import { body } from 'express-validator';
-import { auth } from '../middleware/auth.js';
+import { auth, authorize } from '../middleware/auth.js';
+import upload from '../middleware/multer.js';
 import {
   register,
   login,
   getProfile,
   updateProfile,
-  changePassword
+  resetPassword,
+  getPendingApprovals,
+  approveUser,
+  rejectUser
 } from '../controllers/authController.js';
 
 const router = express.Router();
 
-// Register
-router.post(
-  '/register',
-  [
-    body('name').trim().notEmpty().withMessage('Name is required'),
-    body('email').isEmail().withMessage('Valid email is required'),
-    body('password')
-      .isLength({ min: 8 })
-      .withMessage('Password must be at least 8 characters'),
-    body('role')
-      .isIn(['NORMAL', 'SCHOOL_ADMIN', 'SUPER_ADMIN', 'POLICY_MAKER', 'SUPPORT_STAFF', 'AUDITOR'])
-      .withMessage('Invalid role')
-  ],
-  register
-);
+// Public routes
+router.post('/register', upload.single('document'), register);
+router.post('/login', login);
 
-// Login
-router.post(
-  '/login',
-  [
-    body('email').isEmail().withMessage('Valid email is required'),
-    body('password').notEmpty().withMessage('Password is required')
-  ],
-  login
-);
-
-// Get profile
+// authed routes
 router.get('/profile', auth, getProfile);
+router.put('/profile', auth, updateProfile);
+router.put('/reset-password', auth, resetPassword);
 
-// Update profile
-router.patch(
-  '/profile',
+// Admin routes
+router.get(
+  '/pending-approvals',
   auth,
-  [
-    body('name').optional().trim().notEmpty().withMessage('Name cannot be empty'),
-    body('profileImage').optional().isURL().withMessage('Valid image URL required')
-  ],
-  updateProfile
+  authorize('SUPER_ADMIN'),
+  getPendingApprovals
 );
-
-// Change password
-router.post(
-  '/change-password',
+router.put(
+  '/approve/:userId',
   auth,
-  [
-    body('currentPassword').notEmpty().withMessage('Current password is required'),
-    body('newPassword')
-      .isLength({ min: 8 })
-      .withMessage('New password must be at least 8 characters')
-  ],
-  changePassword
+  authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'),
+  approveUser
+);
+router.delete(
+  '/reject/:userId',
+  auth,
+  authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'),
+  rejectUser
 );
 
 export default router;

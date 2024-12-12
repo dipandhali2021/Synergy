@@ -39,7 +39,7 @@ export function KnowYourSchoolPage() {
     currentPage,
     setCurrentPage,
   } = useSchoolSearch();
-
+console.log(schools);
   const handleSchoolSelect = (school: School) => {
     if (
       selectedSchools.length < 3 &&

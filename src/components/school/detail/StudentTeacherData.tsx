@@ -24,20 +24,21 @@ export function StudentTeacherData({ school }: StudentTeacherDataProps) {
   // Extract and transform student demographics data
   const demographics = school.studentDemographics;
   const totalStudents = school.totalStudents;
+  console.log(demographics[0].general / totalStudents);
   const studentDemographics = [
-    { name: 'General', value: (demographics.general / totalStudents) * 100 },
-    { name: 'SC', value: (demographics.SC / totalStudents) * 100 },
-    { name: 'ST', value: (demographics.ST / totalStudents) * 100 },
-    { name: 'OBC', value: (demographics.OBC / totalStudents) * 100 },
+    { name: 'General', value: (demographics[0].general / totalStudents) * 100 },
+    { name: 'SC', value: (demographics[0].SC / totalStudents) * 100 },
+    { name: 'ST', value: (demographics[0].ST / totalStudents) * 100 },
+    { name: 'OBC', value: (demographics[0].OBC / totalStudents) * 100 },
   ];
 
   // Extract and transform teacher qualifications data
   const qualifications = school.teacherQualifications;
   const teacherQualifications = [
-    { qualification: 'Ph.D', count: qualifications.PhD },
-    { qualification: 'Post Graduate', count: qualifications.postGraduate },
-    { qualification: 'Graduate', count: qualifications.graduate },
-    { qualification: 'Other', count: qualifications.other },
+    { qualification: 'Ph.D', count: qualifications[0].PhD },
+    { qualification: 'Post Graduate', count: qualifications[0].postGraduate },
+    { qualification: 'Graduate', count: qualifications[0].graduate },
+    { qualification: 'Other', count: qualifications[0].other },
   ];
 
   // Define colors for charts
