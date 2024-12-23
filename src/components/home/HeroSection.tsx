@@ -19,7 +19,7 @@ export function HeroSection() {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/school/details/insertschool',
+        'https://synergy-157w.onrender.com/api/school/details/insertschool',
         {
           schoolID: user?.schoolId,
         }

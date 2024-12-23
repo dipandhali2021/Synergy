@@ -43,7 +43,7 @@ export function ResourceMatchingSystem() {
     if (!schoolId) return;
     setSearching(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/school/details/search/${schoolId}`);
+      const response = await axios.get(`https://synergy-157w.onrender.com/api/school/details/search/${schoolId}`);
       console.log(response.data);
       setSchools(response.data);
     } catch (error) {
@@ -56,7 +56,7 @@ export function ResourceMatchingSystem() {
   const findMatches = async (schoolId: string) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/resource-plans/matches/${schoolId}`);
+      const response = await axios.get(`https://synergy-157w.onrender.com/api/resource-plans/matches/${schoolId}`);
       setMatches(response.data);
       setSchools([]); // Clear school search results
       setSchoolSearchTerm(''); // Clear search term
@@ -74,7 +74,7 @@ export function ResourceMatchingSystem() {
 
   const initiateResourceRequest = async (matchedSchoolId: string, matchScore: any ) => {
     try {
-      await axios.post(' http://localhost:5000/api/resource-plans/matches', {
+      await axios.post(' https://synergy-157w.onrender.com/api/resource-plans/matches', {
         requestingSchoolId: selectedSchoolId,
         matchedSchoolId,
         status: 'pending',

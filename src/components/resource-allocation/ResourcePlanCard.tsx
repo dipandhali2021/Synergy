@@ -57,7 +57,7 @@ export function ResourcePlanCard({
 
   const handleApprove = async (planId: string) => {
     try {
-      await axios.put(`http://localhost:5000/api/resource-plans/approve/${planId}`);
+      await axios.put(`https://synergy-157w.onrender.com/api/resource-plans/approve/${planId}`);
       onApprove(planId); // Trigger the fetchPlans callback
       window.location.reload();
     } catch (error) {
@@ -67,7 +67,7 @@ export function ResourcePlanCard({
   
   const handleReject = async (planId: string) => {
     try {
-      await axios.put(`http://localhost:5000/api/resource-plans/reject/${planId}`);
+      await axios.put(`https://synergy-157w.onrender.com/api/resource-plans/reject/${planId}`);
       onReject(planId); // Trigger the fetchPlans callback
       window.location.reload();
     } catch (error) {
@@ -77,7 +77,7 @@ export function ResourcePlanCard({
   
   const handleModify = async (planId: string) => {
     try {
-      await axios.put(`http://localhost:5000/api/resource-plans/modify/${planId}`, { status: 'modified' });
+      await axios.put(`https://synergy-157w.onrender.com/api/resource-plans/modify/${planId}`, { status: 'modified' });
       onModify(planId); // Trigger the fetchPlans callback
       window.location.reload();
     } catch (error) {

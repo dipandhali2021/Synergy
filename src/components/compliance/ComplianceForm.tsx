@@ -30,7 +30,7 @@ export function ComplianceForm({ onClose }: ComplianceFormProps) {
   const onSubmit = async (data: ComplianceFormData) => {
     try {
     console.log(data);
-      await axios.post('http://localhost:5000/api/standardization/item', data);
+      await axios.post('https://synergy-157w.onrender.com/api/standardization/item', data);
       onClose();
       // Optionally trigger a refresh of the compliance data
     } catch (error) {

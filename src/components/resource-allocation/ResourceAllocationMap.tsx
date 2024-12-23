@@ -105,7 +105,7 @@ export function ResourceAllocationMap({
     const fetchLocations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/resource-plans/resourcemap"
+          "https://synergy-157w.onrender.com/api/resource-plans/resourcemap"
         );
         console.log("locations", response.data);
         setLocations(response.data);

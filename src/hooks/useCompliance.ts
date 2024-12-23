@@ -146,8 +146,8 @@ export function useCompliance() {
     try {
       setLoading(true);
       const [categoriesRes, statsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/standardization/categories'),
-        axios.get('http://localhost:5000/api/standardization/stats')
+        axios.get('https://synergy-157w.onrender.com/api/standardization/categories'),
+        axios.get('https://synergy-157w.onrender.com/api/standardization/stats')
       ]);
       console.log(categoriesRes);
       // Map backend data to frontend structure
@@ -226,7 +226,7 @@ export function useCompliance() {
       });
   
       // Make API call to update the database
-      await axios.patch('http://localhost:5000/api/standardization/item/', {
+      await axios.patch('https://synergy-157w.onrender.com/api/standardization/item/', {
         categoryId,
         itemId,
         isCompleted: value,
@@ -240,7 +240,7 @@ export function useCompliance() {
 
   const addComplianceItem = async (data: any) => {
     try {
-      await axios.post('http://localhost:4000/api/v1/standardization/item', data);
+      await axios.post('https://synergy-157w.onrender.com/api/v1/standardization/item', data);
       fetchData();
     } catch (err) {
       console.error('Error adding compliance item:', err);

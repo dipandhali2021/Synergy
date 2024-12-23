@@ -55,7 +55,7 @@ export function AnalysisForm() {
 
       // Make the POST request with the parsed object
       const response = await axios.post(
-        "http://localhost:5000/api/school/details/insertschool",
+        "https://synergy-157w.onrender.com/api/school/details/insertschool",
         obj
       );
 
@@ -101,7 +101,7 @@ export function AnalysisForm() {
 
       // Use the data directly for the POST request
       const response = await axios.post(
-        "http://localhost:5000/api/v1/school/insertschool",
+        "https://synergy-157w.onrender.com/api/v1/school/insertschool",
         data // Directly pass the data from the form
       );
 

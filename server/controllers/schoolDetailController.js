@@ -10,7 +10,7 @@ export const createSchoolDetail = async (req, res) => {
     const { schoolID } = req.body;
     console.log('Request body:', schoolID);
 
-    const dataUrl = 'http://127.0.0.1:5000/fetch-school-data';
+    const dataUrl = 'https://synergy-backend-flask.onrender.comhttps://synergy-backend-flask.onrender.com/fetch-school-data';
 
     const sending = {
       school_id: schoolID,
@@ -390,7 +390,7 @@ export const createSchoolDetail = async (req, res) => {
 
     // console.log(cleanedResponse);
 
-    const apiUrl = 'http://127.0.0.1:5000/predict_school_rating';
+    const apiUrl = 'https://synergy-backend-flask.onrender.comhttps://synergy-backend-flask.onrender.com/predict_school_rating';
 
     // Replace with your Flask API URL
 

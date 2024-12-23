@@ -39,7 +39,7 @@ export function ResourceSharingHub() {
   // Search for school
   const searchSchool = async (schoolId: string) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/school/details/search/${schoolId}`);
+      const response = await axios.get(`https://synergy-157w.onrender.com/api/school/details/search/${schoolId}`);
       setSelectedSchool(response.data[0]);
       console.log(response.data);
     } catch (error) {
@@ -50,7 +50,7 @@ export function ResourceSharingHub() {
   // Fetch available resources
   const fetchAvailableResources = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/resource-plans/available');
+      const response = await axios.get('https://synergy-157w.onrender.com/api/resource-plans/available');
       setAvailableResources(response.data);
     } catch (error) {
       console.error('Error fetching available resources:', error);
@@ -60,7 +60,7 @@ export function ResourceSharingHub() {
   // Share resources
   const handleShareResources = async () => {
     try {
-      await axios.post('http://localhost:5000/api/resource-plans/share', {
+      await axios.post('https://synergy-157w.onrender.com/api/resource-plans/share', {
         schoolId: selectedSchool?.schoolID,
         resources: [{
           ...shareForm,
@@ -82,7 +82,7 @@ export function ResourceSharingHub() {
   // Request shared resource
   const handleRequestResource = async (resourceId: string) => {
     try {
-      await axios.post('http://localhost:5000/api/resource-plans/request-shared', {
+      await axios.post('https://synergy-157w.onrender.com/api/resource-plans/request-shared', {
         requestingSchoolId: selectedSchool?.schoolID,
         resourceId
       });

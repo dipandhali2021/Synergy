@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Policy } from '../types/policy';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://synergy-157w.onrender.com/api';
 
 export const policyService = {
   // Get all policies with optional filters

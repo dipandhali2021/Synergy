@@ -1,7 +1,7 @@
 import { School, SchoolFilters } from '../types/school';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://synergy-157w.onrender.com/api';
 
 // Function to get the Bearer token
 const getAuthToken = () => {

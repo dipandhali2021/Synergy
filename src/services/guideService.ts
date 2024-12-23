@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Guide } from '../types/support';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://synergy-157w.onrender.com/api';
 
 export const guideService = {
   async getAllGuides(): Promise<Guide[]> {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Survey, SurveyResponse, SurveyAnalytics } from '../types/engagement';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://synergy-157w.onrender.com/api';
 
 // Helper to get token from localStorage
 const getToken = () => localStorage.getItem('token');

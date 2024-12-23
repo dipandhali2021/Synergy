@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { CommunityFeedback } from '../types/feedback';
 
-const API_BASE_URL = 'http://localhost:5000/api/';
+const API_BASE_URL = 'https://synergy-157w.onrender.com/api/';
 
 export const feedbackService = {
   getAllFeedback: async (): Promise<CommunityFeedback[]> => {

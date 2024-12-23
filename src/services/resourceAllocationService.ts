@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const resourceAllocationService = {
   getResourcePlans: async (schoolId: string): Promise<ResourcePlan[]> => {
-    const ans = await axios.get("http://localhost:5000/api/resource-plans/getallresourcerequests/")
+    const ans = await axios.get("https://synergy-157w.onrender.com/api/resource-plans/getallresourcerequests/")
     return ans.data;
     // return new Promise((resolve) => {
     //   setTimeout(() => {

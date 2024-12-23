@@ -1,6 +1,6 @@
 import { LoginCredentials, RegisterData } from '../types/auth';
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = 'https://synergy-157w.onrender.com/api/auth';
 
 export const authService = {
   login: async (credentials: LoginCredentials) => {
