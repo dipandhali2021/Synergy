@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Discussion, NewDiscussion, Reply } from '../types/discussion';
 
-const API_URL = 'https://synergy-157w.onrender.com/api';
+const API_URL = 'https://synergy-backend-six.vercel.app/api';
 
 // Helper to get token from localStorage
 const getToken = () => localStorage.getItem('token');

@@ -208,7 +208,7 @@ async function generateInsights(schools, type) {
   console.log('Generating insights for:', type, schools);
   try {
     const client = new GoogleGenerativeAI(
-      'AIzaSyAUuOBsFY8zA_9fufowCUqQLxxYxPMdHeQ'
+      'process.env.GEMINI_API_KEY'
     );
     const model = client.getGenerativeModel({ model: 'gemini-1.5-pro' });
 

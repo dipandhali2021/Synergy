@@ -1,6 +1,6 @@
 import { LoginCredentials, RegisterData } from '../types/auth';
 
-const API_URL = 'https://synergy-157w.onrender.com/api/auth';
+const API_URL = 'https://synergy-backend-six.vercel.app/api/auth';
 
 export const authService = {
   login: async (credentials: LoginCredentials) => {

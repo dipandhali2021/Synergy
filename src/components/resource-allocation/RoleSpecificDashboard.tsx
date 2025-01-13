@@ -528,7 +528,7 @@ export function RoleSpecificDashboard() {
   const fetchDashboardData = async () => {
     try {
       const response = await axios.post(
-        'https://synergy-157w.onrender.com/api/resource-plans/school-dashboard/',
+        'https://synergy-backend-six.vercel.app/api/resource-plans/school-dashboard/',
         { schoolUdiseCode: user?.schoolId }
       );
       setDashboardData(response.data);
@@ -564,7 +564,7 @@ export function RoleSpecificDashboard() {
     console.log(formData);
     try {
       const response = await fetch(
-        'https://synergy-157w.onrender.com/api/resource-plans/insert-resource-request/',
+        'https://synergy-backend-six.vercel.app/api/resource-plans/insert-resource-request/',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://synergy-157w.onrender.com/api/resource-plans';
+const API_BASE_URL = 'https://synergy-backend-six.vercel.app/api/resource-plans';
 
 export interface BudgetOverview {
   total_budget: number;

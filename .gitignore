@@ -25,3 +25,4 @@ dist-ssr
 .env
 code
 SIH-1742_SERVER_SURGEONS
+.pathos/

@@ -228,7 +228,7 @@ export function ResourceImpactSimulator() {
       console.log('Sending request data:', requestData);
 
       // Send POST request to the API
-      const response = await axios.post('https://synergy-backend-flask.onrender.comhttps://synergy-backend-flask.onrender.com/predict', requestData);
+      const response = await axios.post('http://127.0.0.1:5000/predict', requestData);
 
       console.log('API response:', response.data);
 

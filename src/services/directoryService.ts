@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ForumPost, Survey, PolicyUpdate } from '../types/engagement';
 import { Stakeholder, ConnectionRequest } from '../types/directory';
 
-const API_URL = 'https://synergy-157w.onrender.com/api';
+const API_URL = 'https://synergy-backend-six.vercel.app/api';
 
 // Get the Bearer token dynamically (e.g., from local storage or a cookie)
 const getAuthToken = () => {

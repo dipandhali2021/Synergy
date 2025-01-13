@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://synergy-157w.onrender.com/api/school-progress';
+const API_BASE_URL = 'https://synergy-backend-six.vercel.app/api/school-progress';
 
 // Function to get the Bearer token
 const getAuthToken = () => {

@@ -235,7 +235,7 @@ if not suggestions:
 # # Function to interact with the chatbot about suggestions
 # def chatbot_integration(suggestions):
 #     # Configure API key for Google Generative AI
-#     genai.configure(api_key="AIzaSyAUuOBsFY8zA_9fufowCUqQLxxYxPMdHeQ")  # Replace with your actual API key
+#     genai.configure(api_key="process.env.GEMINI_API_KEY")  # Replace with your actual API key
 
 #     print("\nWelcome to the Suggestion Chatbot!")
 #     print("You can ask questions about the suggestions provided.")

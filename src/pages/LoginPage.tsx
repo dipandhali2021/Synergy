@@ -15,7 +15,7 @@ export function LoginPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('https://synergy-157w.onrender.com/api/auth/login', {
+      const response = await fetch('https://synergy-backend-six.vercel.app/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ export function RegisterPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('https://synergy-157w.onrender.com/api/auth/register', {
+      const response = await fetch('https://synergy-backend-six.vercel.app/api/auth/register', {
         method: 'POST',
         body: data instanceof FormData ? data : JSON.stringify(data),
         headers: data instanceof FormData ? undefined : {

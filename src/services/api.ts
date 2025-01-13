@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://synergy-157w.onrender.com/api'
+  baseURL: 'https://synergy-backend-six.vercel.app/api'
 });
 
 // Add token to requests if it exists

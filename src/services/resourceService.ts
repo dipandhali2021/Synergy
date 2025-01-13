@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://synergy-157w.onrender.com/api/resources';
+const API_URL = 'https://synergy-backend-six.vercel.app/api/resources';
 
 interface ResourceData {
   title: string;

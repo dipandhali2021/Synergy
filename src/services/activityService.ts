@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://synergy-157w.onrender.com/api/activities';
+const API_URL = 'https://synergy-backend-six.vercel.app/api/activities';
 
 export const activityService = {
   trackActivity: async (data: {

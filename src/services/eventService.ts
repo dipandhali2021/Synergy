@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://synergy-157w.onrender.com/api';
+const API_URL = 'https://synergy-backend-six.vercel.app/api';
 
 export const eventService = {
   // Get all events with optional filters

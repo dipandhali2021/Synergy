@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -27,6 +27,7 @@ import {
 import { AnalysisFormData } from "../../types/analysis";
 import { generatePDF } from "../../utils/pdfGenerator";
 import { useLocation } from "react-router-dom";
+import { Pagination } from "../common/Pagination"; // Import Pagination
 
 interface AIAnalysisResultProps {
   data: AnalysisFormData;
@@ -84,7 +85,19 @@ export function AIAnalysisResult() {
     return `${percentage.toFixed(2)}%`;
   }
 
-  // const handlecompliancescore;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Number of recommendations per page
+  const totalPages = Math.ceil((backendResponse?.suggestions.length || 0) / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const paginatedRecommendations = backendResponse?.suggestions.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="space-y-8 bg-gray-50 p-8 rounded-xl">
       {/* Header Section */}
@@ -218,7 +231,7 @@ export function AIAnalysisResult() {
 <div className="bg-white rounded-xl p-6 shadow-lg">
   <h3 className="text-xl font-semibold mb-6">Recommendations</h3>
   <div className="space-y-4">
-    {backendResponse?.suggestions.map((rec, index) => {
+    {paginatedRecommendations.map((rec, index) => {
       // Randomly assign a color from a list of predefined colors
       const colors = [
         "bg-red-50 border-l-4 border-red-500",
@@ -242,6 +255,13 @@ export function AIAnalysisResult() {
       );
     })}
   </div>
+  <Pagination
+    currentPage={currentPage}
+    totalItems={backendResponse?.suggestions.length || 0}
+    itemsPerPage={itemsPerPage}
+    onPageChange={handlePageChange}
+    totalPages={totalPages}
+  />
 </div>
 
     </div>

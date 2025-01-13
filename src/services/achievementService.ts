@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Achievement, NewAchievement } from '../types/achievement';
 
-const API_URL = 'https://synergy-157w.onrender.com/api/achievements';
+const API_URL = 'https://synergy-backend-six.vercel.app/api/achievements';
 
 // Get the Bearer token dynamically (e.g., from localStorage)
 const getAuthToken = () => {

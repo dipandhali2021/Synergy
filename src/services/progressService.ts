@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { StateProgress, KeyMetrics, TransitionTrend, Insight } from '../types/progress';
 
-const API_BASE_URL = 'https://synergy-157w.onrender.com/api/progress';
+const API_BASE_URL = 'https://synergy-backend-six.vercel.app/api/progress';
 
 // Function to get the Bearer token
 const getAuthToken = () => {

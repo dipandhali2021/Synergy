@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { TrainingModule } from '../types/support';
 
-const API_BASE_URL = 'https://synergy-157w.onrender.com/api';
+const API_BASE_URL = 'https://synergy-backend-six.vercel.app/api';
 
 export const trainingService = {
   async getAllTrainings(): Promise<TrainingModule[]> {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Challenge, ChallengeMetrics } from '../types/challenges';
 
-const API_URL = 'https://synergy-157w.onrender.com/api/challenges';
+const API_URL = 'https://synergy-backend-six.vercel.app/api/challenges';
 
 export const challengesService = {
   async getChallenges(): Promise<{ challenges: Challenge[]; metrics: ChallengeMetrics }> {

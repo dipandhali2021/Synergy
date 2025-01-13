@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ResourceUtilization, CombinedResourceData, OverviewMetrics } from '../types/reports';
 
-const API_BASE_URL = 'https://synergy-157w.onrender.com/api/resource';
+const API_BASE_URL = 'https://synergy-backend-six.vercel.app/api/resource';
 
 export const resourceReportsService = {
   async fetchResourceRequests() {

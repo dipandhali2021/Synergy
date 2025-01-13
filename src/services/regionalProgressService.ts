@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { RegionalMetrics, StateComparison, RegionalChallenge, RegionalGoal } from '../types/progress';
 
-const API_BASE_URL = 'https://synergy-157w.onrender.com/api/regional-progress';
+const API_BASE_URL = 'https://synergy-backend-six.vercel.app/api/regional-progress';
 
 // Function to get the Bearer token
 const getAuthToken = () => {

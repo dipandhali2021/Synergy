@@ -46,7 +46,7 @@ export function PublicResourceDashboard() {
     try {
       console.log("Feedback Submitted:", data);
       const response = await axios.post(
-        "https://synergy-157w.onrender.com/api/resource-plans/feedback/",
+        "https://synergy-backend-six.vercel.app/api/resource-plans/feedback/",
         data
       );
       console.log("Backend Response:", response.data);
@@ -76,7 +76,7 @@ export function PublicResourceDashboard() {
   const fetchFeedback = async () => {
     try {
       const response = await axios.get(
-        "https://synergy-157w.onrender.com/api/resource-plans/feedback/"
+        "https://synergy-backend-six.vercel.app/api/resource-plans/feedback/"
       );
       const mappedFeedback: CommunityFeedback[] = response.data.map(
         (item: any) => ({
@@ -100,7 +100,7 @@ export function PublicResourceDashboard() {
     const fetchAllocationData = async () => {
       try {
         const response = await axios.get(
-          "https://synergy-157w.onrender.com/api/resource-plans/allocation-utilization/"
+          "https://synergy-backend-six.vercel.app/api/resource-plans/allocation-utilization/"
         );
         setAllocationData(response.data);
       } catch (err) {
@@ -116,7 +116,7 @@ export function PublicResourceDashboard() {
     const fetchDistributionData = async () => {
       try {
         const response = await axios.get(
-          "https://synergy-157w.onrender.com/api/resource-plans/getdistribution"
+          "https://synergy-backend-six.vercel.app/api/resource-plans/getdistribution"
         );
         if (response.data.success) {
           setDistributionData(response.data.distributionData);
